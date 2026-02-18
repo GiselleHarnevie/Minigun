@@ -30,7 +30,7 @@ namespace dae
 
 		//Component functions
 		template<typename T, typename ...Args>
-			requires std::is_base_of_v<Component, T>
+		requires std::is_base_of_v<Component, T>
 		T& AddComponent(Args&&... args)
 		{
 			auto component = std::make_unique<T>(this, std::forward<Args>(args)...);

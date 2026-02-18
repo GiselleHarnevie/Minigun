@@ -43,6 +43,7 @@ void dae::TextComponent::FixedUpdate(const float /*fixedTimeStep*/)
 
 void dae::TextComponent::Render() const
 {
+
 	if (m_textTexture != nullptr)
 	{
 		const auto& pos = GetOwner()->GetPosition();
