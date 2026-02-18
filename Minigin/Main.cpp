@@ -8,8 +8,12 @@
 #include "Minigin.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
-#include "TextObject.h"
+//#include "TextObject.h"
 #include "Scene.h"
+#include "GameObject.h"
+#include "TextComponent.h"
+#include "FPSComponent.h"
+#include "TextureComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -17,8 +21,29 @@ namespace fs = std::filesystem;
 static void load()
 {
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
+	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 
 	auto go = std::make_unique<dae::GameObject>();
+	go->AddComponent<dae::TextureComponent>("background.png");
+	scene.Add(std::move(go));
+
+	go = std::make_unique<dae::GameObject>();
+	go->AddComponent<dae::TextureComponent>("logo.png");
+	go->SetPosition(500, 200);
+	scene.Add(std::move(go));
+
+	auto to = std::make_unique<dae::GameObject>();
+	to->AddComponent<dae::TextComponent>("Programming 4 Assignment", font, SDL_Color{ 255, 255, 0, 255 });
+	to->SetPosition(292, 20);
+	scene.Add(std::move(to));
+
+	go = std::make_unique<dae::GameObject>();
+	go->AddComponent<dae::TextComponent>("FPS", font, SDL_Color{ 255, 255, 0, 255 });
+	go->AddComponent<dae::FPSComponent>();
+	go->SetPosition(300,180);
+	scene.Add(std::move(go));
+
+	/*auto go = std::make_unique<dae::GameObject>();
 	go->SetTexture("background.png");
 	scene.Add(std::move(go));
 
@@ -27,24 +52,23 @@ static void load()
 	go->SetPosition(358, 180);
 	scene.Add(std::move(go));
 
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_unique<dae::TextObject>("Giselle Programming 4 Assignment", font);
+	auto to = std::make_unique<dae::TextObject>("Programming 4 Assignment", font);
 	to->SetColor({ 255, 255, 0, 255 });
 	to->SetPosition(292, 20);
-	scene.Add(std::move(to));
+	scene.Add(std::move(to));*/
 
-	
+
 }
 
-int main(int, char*[]) {
+int main(int, char* []) {
 #if __EMSCRIPTEN__
 	fs::path data_location = "";
 #else
 	fs::path data_location = "./Data/";
-	if(!fs::exists(data_location))
+	if (!fs::exists(data_location))
 		data_location = "../Data/";
 #endif
 	dae::Minigin engine(data_location);
 	engine.Run(load);
-    return 0;
+	return 0;
 }
