@@ -1,6 +1,8 @@
 ﻿#include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -15,8 +17,13 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "TextObject.h"
+
+using namespace std::chrono;
 
 SDL_Window* g_window{};
+const int ms_per_frame = 16;
+const float fixed_time_step = 1.0f / 60.0f;
 
 void LogSDLVersion(const std::string& message, int major, int minor, int patch)
 {
@@ -49,15 +56,15 @@ void PrintSDLVersion()
 	// LogSDLVersion("Compiled with SDL_image ",SDL_IMAGE_MAJOR_VERSION, SDL_IMAGE_MINOR_VERSION, SDL_IMAGE_MICRO_VERSION);
 	// version = IMG_Version();
 	// LogSDLVersion("Linked with SDL_image ", SDL_VERSIONNUM_MAJOR(version), SDL_VERSIONNUM_MINOR(version), SDL_VERSIONNUM_MICRO(version));
-	LogSDLVersion("Compiled with SDL_ttf ",	SDL_TTF_MAJOR_VERSION, SDL_TTF_MINOR_VERSION,SDL_TTF_MICRO_VERSION);
+	LogSDLVersion("Compiled with SDL_ttf ", SDL_TTF_MAJOR_VERSION, SDL_TTF_MINOR_VERSION, SDL_TTF_MICRO_VERSION);
 	version = TTF_Version();
-	LogSDLVersion("Linked with SDL_ttf ", SDL_VERSIONNUM_MAJOR(version), SDL_VERSIONNUM_MINOR(version),	SDL_VERSIONNUM_MICRO(version));
+	LogSDLVersion("Linked with SDL_ttf ", SDL_VERSIONNUM_MAJOR(version), SDL_VERSIONNUM_MINOR(version), SDL_VERSIONNUM_MICRO(version));
 }
 
 dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 {
 	PrintSDLVersion();
-	
+
 	if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
 	{
 		SDL_Log("Renderer error: %s", SDL_GetError());
@@ -70,7 +77,7 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 		576,
 		SDL_WINDOW_OPENGL
 	);
-	if (g_window == nullptr) 
+	if (g_window == nullptr)
 	{
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
@@ -87,20 +94,40 @@ dae::Minigin::~Minigin()
 	SDL_Quit();
 }
 
+//TODO : [Week1] Implement game loop and Update
 void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
 #ifndef __EMSCRIPTEN__
 	while (!m_quit)
+	{
 		RunOneFrame();
+	}
 #else
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
 #endif
 }
 
+
+auto lastTime = std::chrono::high_resolution_clock::now();
+float lag = 0.0f;
 void dae::Minigin::RunOneFrame()
 {
+	const auto currentTime = std::chrono::high_resolution_clock::now();
+	const float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+	lastTime = currentTime;
+	lag += deltaTime;
+
 	m_quit = !InputManager::GetInstance().ProcessInput();
-	SceneManager::GetInstance().Update();
+	while (lag >= fixed_time_step)
+	{
+		SceneManager::GetInstance().FixedUpdate(fixed_time_step);
+		lag -= fixed_time_step;
+	}
+	SceneManager::GetInstance().Update(deltaTime);
 	Renderer::GetInstance().Render();
+
+	const auto sleepTime = currentTime + milliseconds(ms_per_frame) - high_resolution_clock::now();
+
+	std::this_thread::sleep_for(sleepTime);
 }

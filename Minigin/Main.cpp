@@ -32,6 +32,8 @@ static void load()
 	to->SetColor({ 255, 255, 0, 255 });
 	to->SetPosition(292, 20);
 	scene.Add(std::move(to));
+
+	
 }
 
 int main(int, char*[]) {
