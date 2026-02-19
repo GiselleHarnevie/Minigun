@@ -19,14 +19,12 @@ namespace dae {
 		void Destroy();
 		bool IsDestroyed() const;
 		
-
-
 	protected:
 		explicit Component(GameObject* pOwner);
 		GameObject* GetOwner() const;
 
 	private:
-		GameObject* m_pOwner;
+		GameObject* m_pOwner; //should always be private
 		bool m_IsDestroyed;
 	};
 }

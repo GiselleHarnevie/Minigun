@@ -4,16 +4,16 @@
 
 namespace dae
 {
-	class Transform final : public Component
+	class TransformComponent final : public Component
 	{
 	public:
-		Transform(GameObject* gameObject);
-		virtual ~Transform() = default;
+		TransformComponent(GameObject* gameObject);
+		virtual ~TransformComponent() = default;
 
-		Transform(const Transform& other) = delete;
-		Transform(Transform&& other) = delete;
-		Transform& operator=(const Transform& other) = delete;
-		Transform& operator=(Transform&& other) = delete;
+		TransformComponent(const TransformComponent& other) = delete;
+		TransformComponent(TransformComponent&& other) = delete;
+		TransformComponent& operator=(const TransformComponent& other) = delete;
+		TransformComponent& operator=(TransformComponent&& other) = delete;
 
 		const glm::vec3& GetPosition() const { return m_position; }
 		void SetPosition(float x, float y, float z = 0);
