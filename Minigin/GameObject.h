@@ -2,7 +2,7 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include "Transform.h"
+#include "TransformComponent.h"
 #include "Component.h"
 #include <algorithm>
 
@@ -13,15 +13,16 @@ namespace dae
 	{
 	public:
 		GameObject() = default;
-		virtual ~GameObject();
+		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
 
-		virtual void FixedUpdate(float fixedTimeStep);
-		virtual void Update(float deltaTime);
-		virtual void Render() const;
+		//todo: remove virtuals, this is final class
+		void FixedUpdate(float fixedTimeStep);
+		void Update(float deltaTime);
+		void Render() const;
 
 		void SetTexture(const std::string& filename);
 
@@ -60,8 +61,8 @@ namespace dae
 		std::vector<std::unique_ptr<Component>> m_Components;
 
 
-		Transform* m_pTransform = nullptr;
-		std::shared_ptr<Texture2D> m_texture{};
+		TransformComponent* m_pTransform = nullptr;
+		std::shared_ptr<Texture2D> m_texture{}; //get rid of this
 
 	};
 }
