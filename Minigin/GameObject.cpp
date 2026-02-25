@@ -3,6 +3,11 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
+dae::GameObject::GameObject()
+{
+	m_pTransform = &AddComponent<TransformComponent>();
+}
+
 dae::GameObject::~GameObject() = default;
 
 void dae::GameObject::Update(float deltaTime)

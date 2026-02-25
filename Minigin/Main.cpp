@@ -29,7 +29,7 @@ static void load()
 
 	go = std::make_unique<dae::GameObject>();
 	go->AddComponent<dae::TextureComponent>("logo.png");
-	go->SetPosition(500, 200);
+	go->SetPosition(358, 180);
 	scene.Add(std::move(go));
 
 	auto to = std::make_unique<dae::GameObject>();
@@ -40,7 +40,7 @@ static void load()
 	go = std::make_unique<dae::GameObject>();
 	go->AddComponent<dae::TextComponent>("FPS", font, SDL_Color{ 255, 255, 0, 255 });
 	go->AddComponent<dae::FPSComponent>();
-	go->SetPosition(300,180);
+	go->SetPosition(10,10);
 	scene.Add(std::move(go));
 
 	/*auto go = std::make_unique<dae::GameObject>();

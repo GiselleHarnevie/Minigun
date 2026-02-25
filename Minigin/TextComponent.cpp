@@ -12,12 +12,11 @@ dae::TextComponent::TextComponent(GameObject* gameObject, const std::string& tex
 	m_text(text), 
 	m_color(color), 
 	m_font(std::move(font)), 
-	m_textTexture(nullptr),
-	m_pTransform{}
+	m_textTexture(nullptr)
 {
 }
 
-void dae::TextComponent::Update(float /*elapsedSec*/)
+void dae::TextComponent::Update(float)
 {
 	if (m_needsUpdate)
 	{
@@ -37,7 +36,7 @@ void dae::TextComponent::Update(float /*elapsedSec*/)
 	}
 }
 
-void dae::TextComponent::FixedUpdate(const float /*fixedTimeStep*/)
+void dae::TextComponent::FixedUpdate(const float)
 {
 }
 

@@ -12,7 +12,7 @@ namespace dae
 	class GameObject final
 	{
 	public:
-		GameObject() = default;
+		GameObject();
 		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;

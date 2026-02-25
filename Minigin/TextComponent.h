@@ -33,7 +33,6 @@ namespace dae
 		bool m_needsUpdate{};
 		std::string m_text{};
 		SDL_Color m_color{ 255, 255, 255, 255 };
-		TransformComponent* m_pTransform = nullptr;
 		std::shared_ptr<Font> m_font{};
 		std::shared_ptr<Texture2D> m_textTexture{};
 	};
