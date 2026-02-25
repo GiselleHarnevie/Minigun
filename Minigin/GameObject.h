@@ -2,13 +2,14 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <typeindex>
+#include <type_traits>
 #include "TransformComponent.h"
 #include "Component.h"
 #include <algorithm>
 
 namespace dae
 {
-	class Texture2D;
 	class GameObject final
 	{
 	public:
@@ -19,15 +20,12 @@ namespace dae
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
 
-		//todo: remove virtuals, this is final class
 		void FixedUpdate(float fixedTimeStep);
 		void Update(float deltaTime);
 		void Render() const;
 
-		void SetTexture(const std::string& filename);
-
-		void SetPosition(float x, float y);
-		const glm::vec3& GetPosition() const;
+		//void SetPosition(float x, float y);
+		//const glm::vec3& GetPosition() const;
 
 		//Component functions
 		template<typename T, typename ...Args>
@@ -57,12 +55,33 @@ namespace dae
 
 		//todo: remove component and check whether component has been added
 
+		//w2
+		void SetParent(dae::GameObject* parent, bool keepWorldPosition);
+		GameObject* GetParent();
+		int GetChildCount();
+		GameObject* GetChildAt(unsigned int index);
+		bool IsChild(GameObject* potentialChild) const;
+
+		TransformComponent& GetTransform();
+		const glm::vec3& GetWorldPosition();
+		void SetLocalPosition(const glm::vec3& pos);
+		const glm::vec3& GetLocalPosition();
+		void SetPositionDirty();
+
 	private:
 		std::vector<std::unique_ptr<Component>> m_Components;
-
-
 		TransformComponent* m_pTransform = nullptr;
-		std::shared_ptr<Texture2D> m_texture{}; //get rid of this
 
+		//w2
+		void UpdateWorldPosition();
+		void AddChild(GameObject* child);
+		void RemoveChild(GameObject* child);
+
+		GameObject* m_pParent;
+		std::vector <GameObject*> m_pChildren;
+
+		glm::vec3 m_WorldPosition{};
+		glm::vec3 m_LocalPosition{};
+		bool m_PositionIsDirty{};
 	};
 }

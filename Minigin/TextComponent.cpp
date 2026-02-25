@@ -45,7 +45,7 @@ void dae::TextComponent::Render() const
 
 	if (m_textTexture != nullptr)
 	{
-		const auto& pos = GetOwner()->GetPosition();
+		const auto& pos = GetOwner()->GetWorldPosition();
 		Renderer::GetInstance().RenderTexture(*m_textTexture, pos.x, pos.y);
 	}
 }
@@ -56,10 +56,10 @@ void dae::TextComponent::SetText(const std::string& text)
 	m_needsUpdate = true;
 }
 
-void dae::TextComponent::SetPosition(float x, float y)
-{
-	GetOwner()->SetPosition(x, y);
-}
+//void dae::TextComponent::SetPosition(float x, float y)
+//{
+//	GetOwner()->SetPosition(x, y);
+//}
 
 void dae::TextComponent::SetColor(const SDL_Color& color)
 {

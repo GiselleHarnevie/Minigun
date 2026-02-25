@@ -14,7 +14,7 @@ void dae::TextureComponent::Render() const
 {
 	if (m_Texture)
 	{
-		const auto& pos = GetOwner()->GetPosition();
+		const auto& pos = GetOwner()->GetWorldPosition();
 		Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
 	}
 }
@@ -24,10 +24,10 @@ void dae::TextureComponent::SetTexture(const std::string& filename)
 	m_Texture = dae::ResourceManager::GetInstance().LoadTexture(filename);
 }
 
-void dae::TextureComponent::FixedUpdate(const float /*fixedTimeStep*/)
+void dae::TextureComponent::FixedUpdate(const float)
 {
 }
 
-void dae::TextureComponent::Update(float /*elapsedSec*/)
+void dae::TextureComponent::Update(float)
 {
 }

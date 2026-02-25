@@ -18,10 +18,10 @@ namespace dae
 		int GetFPS() const;
 
 	private:
+		int m_FPS;
+		float m_FPSTimer;
 		TextComponent* textComponent;
 		int m_FrameCount;
-		float m_FPSTimer;
-		int m_FPS;
 
 
 

@@ -5,12 +5,12 @@
 
 dae::FPSComponent::FPSComponent(GameObject* gameObject)
 	: Component(gameObject),
-	m_FrameCount{},
-	m_FPSTimer{ -1.f },
 	m_FPS{},
-	textComponent{ GetOwner()->GetComponent<TextComponent>() }
+	m_FPSTimer{ },
+	m_FrameCount{}
 {
 	m_FPS = m_FrameCount;
+	textComponent = this->GetOwner()->GetComponent<TextComponent>();
 
 }
 

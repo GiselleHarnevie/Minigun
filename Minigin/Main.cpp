@@ -14,6 +14,7 @@
 #include "TextComponent.h"
 #include "FPSComponent.h"
 #include "TextureComponent.h"
+#include "RotatorComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -29,35 +30,39 @@ static void load()
 
 	go = std::make_unique<dae::GameObject>();
 	go->AddComponent<dae::TextureComponent>("logo.png");
-	go->SetPosition(358, 180);
+	go->SetLocalPosition(glm::vec3{ 358, 180 ,0});
 	scene.Add(std::move(go));
 
 	auto to = std::make_unique<dae::GameObject>();
 	to->AddComponent<dae::TextComponent>("Programming 4 Assignment", font, SDL_Color{ 255, 255, 0, 255 });
-	to->SetPosition(292, 20);
+	to->SetLocalPosition(glm::vec3{ 292, 20 ,0});
 	scene.Add(std::move(to));
 
+	//w1
 	go = std::make_unique<dae::GameObject>();
 	go->AddComponent<dae::TextComponent>("FPS", font, SDL_Color{ 255, 255, 0, 255 });
 	go->AddComponent<dae::FPSComponent>();
-	go->SetPosition(10,10);
+	go->SetLocalPosition(glm::vec3{ 10,10,0 });
 	scene.Add(std::move(go));
 
-	/*auto go = std::make_unique<dae::GameObject>();
-	go->SetTexture("background.png");
-	scene.Add(std::move(go));
+	//w2
+	auto pivot = std::make_unique<dae::GameObject>();
+	pivot->SetLocalPosition(glm::vec3{ 700,350,0 });
+	auto* pivotPtr = pivot.get();
+	scene.Add(std::move(pivot));
 
-	go = std::make_unique<dae::GameObject>();
-	go->SetTexture("logo.png");
-	go->SetPosition(358, 180);
-	scene.Add(std::move(go));
+	auto msPacman = std::make_unique<dae::GameObject>();
+	msPacman->SetParent(pivotPtr, false);
+	msPacman->AddComponent<dae::TextureComponent>("MsPacman.png");
+	msPacman->AddComponent<dae::RotatorComponent>(-10.f, 15.f);
+	auto* msPacmanPtr = msPacman.get();
+	scene.Add(std::move(msPacman));
 
-	auto to = std::make_unique<dae::TextObject>("Programming 4 Assignment", font);
-	to->SetColor({ 255, 255, 0, 255 });
-	to->SetPosition(292, 20);
-	scene.Add(std::move(to));*/
-
-
+	auto child = std::make_unique<dae::GameObject>();
+	child->AddComponent<dae::TextureComponent>("MsPacman.png");
+	child->AddComponent<dae::RotatorComponent>(5.f, 50.f);
+	child->SetParent(msPacmanPtr, false);
+	scene.Add(std::move(child));
 }
 
 int main(int, char* []) {
