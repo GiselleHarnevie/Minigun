@@ -4,8 +4,8 @@
 #include <vector>
 #include <typeindex>
 #include <type_traits>
-#include "TransformComponent.h"
-#include "Component.h"
+#include "Components/TransformComponent.h"
+#include "Components/Component.h"
 #include <algorithm>
 
 namespace dae
@@ -23,9 +23,6 @@ namespace dae
 		void FixedUpdate(float fixedTimeStep);
 		void Update(float deltaTime);
 		void Render() const;
-
-		//void SetPosition(float x, float y);
-		//const glm::vec3& GetPosition() const;
 
 		//Component functions
 		template<typename T, typename ...Args>

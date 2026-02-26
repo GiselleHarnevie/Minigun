@@ -29,8 +29,5 @@ namespace dae {
 	private:
 		GameObject* m_pOwner; //should always be private
 		bool m_IsDestroyed;
-
-		
-
 	};
 }

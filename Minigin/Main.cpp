@@ -8,13 +8,12 @@
 #include "Minigin.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
-//#include "TextObject.h"
 #include "Scene.h"
 #include "GameObject.h"
-#include "TextComponent.h"
-#include "FPSComponent.h"
-#include "TextureComponent.h"
-#include "RotatorComponent.h"
+#include "Components/TextComponent.h"
+#include "Components/FPSComponent.h"
+#include "Components/TextureComponent.h"
+#include "Components/RotatorComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;

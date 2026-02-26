@@ -56,11 +56,6 @@ void dae::TextComponent::SetText(const std::string& text)
 	m_needsUpdate = true;
 }
 
-//void dae::TextComponent::SetPosition(float x, float y)
-//{
-//	GetOwner()->SetPosition(x, y);
-//}
-
 void dae::TextComponent::SetColor(const SDL_Color& color)
 {
 	m_color = color;

@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "Components/Component.h"
 #include "GameObject.h"
 #include <memory>
 #include <SDL3/SDL_pixels.h>
@@ -22,7 +22,6 @@ namespace dae
 
 		void Render() const override;
 		void SetText(const std::string& text);
-		//void SetPosition(float x, float y);
 		void SetColor(const SDL_Color& color);
 
 	private:

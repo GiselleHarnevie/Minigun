@@ -17,7 +17,7 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
-#include "TextObject.h"
+//#include "TextObject.h"
 
 using namespace std::chrono;
 
