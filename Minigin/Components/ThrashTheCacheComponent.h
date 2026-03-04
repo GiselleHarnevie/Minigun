@@ -50,7 +50,7 @@ namespace dae
 		void GenerateExerciseTwoAlt() const;
 		void PlotExerciseTwo() const;
 
-		float RemoveOutliers();
+		float RemoveOutliersAndAveraging(std::vector<float> timeValues) const;
 
 	private:
 		static constexpr int m_size = 10000000;

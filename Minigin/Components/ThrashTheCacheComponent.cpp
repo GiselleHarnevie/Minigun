@@ -7,6 +7,8 @@
 #include <vector>
 #include <backends/imgui_impl_sdl3.h>
 #include <backends/imgui_impl_sdlrenderer3.h>
+#include <algorithm>
+#include <numeric>
 
 
 dae::ThrashTheCacheComponent::ThrashTheCacheComponent(GameObject* owner)
@@ -53,7 +55,7 @@ void dae::ThrashTheCacheComponent::GenerateExerciseOneValues() const
 
 	for (stepsize = 1; stepsize <= 1024; stepsize *= 2)
 	{
-		float totalElapsedSec{};
+		std::vector<float> samples;
 
 		for (int sample = 0; sample < m_SamplesExerciseOne; sample++)
 		{
@@ -65,13 +67,14 @@ void dae::ThrashTheCacheComponent::GenerateExerciseOneValues() const
 
 			}
 			auto end = std::chrono::high_resolution_clock::now();
-			totalElapsedSec = duration_cast<std::chrono::microseconds>(end - start).count() / 1000.f;
-
+			float totalElapsedSec = duration_cast<std::chrono::microseconds>(end - start).count() / 1000.f;
+			samples.push_back(totalElapsedSec);
 		}
-		float averageTime = totalElapsedSec / m_SamplesExerciseOne;
+		float averageTime = RemoveOutliersAndAveraging(samples);
 		m_ExerciseOne.push_back(static_cast<float>(averageTime));
 	}
 
+	delete[] arr;
 }
 
 void dae::ThrashTheCacheComponent::PlotExerciseOne() const
@@ -122,7 +125,7 @@ void dae::ThrashTheCacheComponent::GenerateExerciseTwo() const
 
 	for (stepsize = 1; stepsize <= 1024; stepsize *= 2)
 	{
-		float totalElapsedSec{};
+		std::vector<float> samples;
 
 		for (int sample = 0; sample < m_SamplesExerciseTwo; sample++)
 		{
@@ -133,12 +136,15 @@ void dae::ThrashTheCacheComponent::GenerateExerciseTwo() const
 
 			}
 			auto end = std::chrono::high_resolution_clock::now();
-			totalElapsedSec = duration_cast<std::chrono::microseconds>(end - start).count() / 1000.f;
-
+			float totalElapsedSec = duration_cast<std::chrono::microseconds>(end - start).count() / 1000.f;
+			samples.push_back(totalElapsedSec);
 		}
-		float averageTime = totalElapsedSec / m_SamplesExerciseTwo;
+		float averageTime = RemoveOutliersAndAveraging(samples);
 		m_ExerciseTwo.push_back(static_cast<float>(averageTime));
 	}
+
+	delete[] arrGO;
+
 }
 
 void dae::ThrashTheCacheComponent::GenerateExerciseTwoAlt() const
@@ -149,7 +155,7 @@ void dae::ThrashTheCacheComponent::GenerateExerciseTwoAlt() const
 
 	for (stepsize = 1; stepsize <= 1024; stepsize *= 2)
 	{
-		float totalElapsedSec{};
+		std::vector<float> samples;
 
 		for (int sample = 0; sample < m_SamplesExerciseTwo; sample++)
 		{
@@ -160,12 +166,14 @@ void dae::ThrashTheCacheComponent::GenerateExerciseTwoAlt() const
 
 			}
 			auto end = std::chrono::high_resolution_clock::now();
-			totalElapsedSec = duration_cast<std::chrono::microseconds>(end - start).count() / 1000.f;
-
+			float totalElapsedSec = duration_cast<std::chrono::microseconds>(end - start).count() / 1000.f;
+			samples.push_back(totalElapsedSec);
 		}
-		float averageTime = totalElapsedSec / m_SamplesExerciseTwo;
+		float averageTime = RemoveOutliersAndAveraging(samples);
 		m_ExerciseTwoAlt.push_back(static_cast<float>(averageTime));
 	}
+
+	delete[] arrGO;
 }
 
 
@@ -271,8 +279,17 @@ void dae::ThrashTheCacheComponent::PlotExerciseTwo() const
 	ImGui::End();
 }
 
-float dae::ThrashTheCacheComponent::RemoveOutliers()
+float dae::ThrashTheCacheComponent::RemoveOutliersAndAveraging(std::vector<float> timeValues) const
 {
+	std::sort(timeValues.begin(), timeValues.end());
+	timeValues.erase(timeValues.begin());
+	timeValues.pop_back();
 
-	return 0.f;
+	float total{};
+	for (auto value : timeValues)
+	{
+		total += value;
+	}
+	float averageTime = total / timeValues.size();
+	return averageTime;
 }
