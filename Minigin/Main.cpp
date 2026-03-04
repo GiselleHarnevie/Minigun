@@ -14,6 +14,7 @@
 #include "Components/FPSComponent.h"
 #include "Components/TextureComponent.h"
 #include "Components/RotatorComponent.h"
+#include "Components/ThrashTheCacheComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -38,14 +39,14 @@ static void load()
 	scene.Add(std::move(to));
 
 	//w1
-	go = std::make_unique<dae::GameObject>();
+	/*go = std::make_unique<dae::GameObject>();
 	go->AddComponent<dae::TextComponent>("FPS", font, SDL_Color{ 255, 255, 0, 255 });
 	go->AddComponent<dae::FPSComponent>();
 	go->SetLocalPosition(glm::vec3{ 10,10,0 });
-	scene.Add(std::move(go));
+	scene.Add(std::move(go));*/
 
 	//w2
-	auto pivot = std::make_unique<dae::GameObject>();
+	/*auto pivot = std::make_unique<dae::GameObject>();
 	pivot->SetLocalPosition(glm::vec3{ 700,350,0 });
 	auto* pivotPtr = pivot.get();
 	scene.Add(std::move(pivot));
@@ -61,7 +62,15 @@ static void load()
 	child->AddComponent<dae::TextureComponent>("MsPacman.png");
 	child->AddComponent<dae::RotatorComponent>(5.f, 50.f);
 	child->SetParent(msPacmanPtr, false);
-	scene.Add(std::move(child));
+	scene.Add(std::move(child));*/
+
+	//scene.Remove(*pivotPtr);
+
+	//w3
+	auto imguiPlot = std::make_unique<dae::GameObject>();
+	imguiPlot->AddComponent<dae::ThrashTheCacheComponent>();
+	scene.Add(std::move(imguiPlot));
+
 }
 
 int main(int, char* []) {

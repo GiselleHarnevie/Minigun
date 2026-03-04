@@ -7,7 +7,7 @@ dae::GameObject::GameObject()
 	: m_pParent{},
 	m_pChildren{}
 {
-	m_pTransform = &AddComponent<TransformComponent>();
+	//m_pTransform = &AddComponent<TransformComponent>();
 }
 
 dae::GameObject::~GameObject() = default;
@@ -36,19 +36,6 @@ void dae::GameObject::Render() const
 	}
 }
 
-//void dae::GameObject::SetPosition(float x, float y)
-//{
-//	if (m_pTransform)m_pTransform->SetPosition(x, y, 0.0f);
-//}
-//
-//const glm::vec3& dae::GameObject::GetPosition() const
-//{
-//	if (m_pTransform) return m_pTransform->GetPosition();
-//
-//	static glm::vec3 zero{};
-//	return zero;
-//}
-
 //w2
 void dae::GameObject::SetParent(GameObject* parent, bool keepWorldPosition)
 {
@@ -70,7 +57,10 @@ void dae::GameObject::SetParent(GameObject* parent, bool keepWorldPosition)
 
 	if (m_pParent) m_pParent->RemoveChild(this);
 	m_pParent = parent;
-	if (m_pParent) { m_pParent->AddChild(this); };
+	if (m_pParent)
+	{
+		m_pParent->AddChild(this);
+	};
 }
 
 dae::GameObject* dae::GameObject::GetParent()
@@ -111,7 +101,7 @@ void dae::GameObject::RemoveChild(GameObject* child)
 
 
 	if (std::find(m_pChildren.begin(), m_pChildren.end(), child) == m_pChildren.end()) return;
-	//update transform
+
 	m_pChildren.erase(std::remove(m_pChildren.begin(), m_pChildren.end(), child), m_pChildren.end());
 	child->m_pParent = nullptr;
 }
@@ -120,11 +110,13 @@ void dae::GameObject::AddChild(GameObject* child)
 {
 	if (child == nullptr || child == this) return;
 
-	if (child->m_pParent)
+	/*if (child->m_pParent)
 	{
 		child->m_pParent->RemoveChild(child);
-	};
-	child->m_pParent = this;
+	};*/
+	//child->m_pParent = this;
+
+	//adding child to list of children
 	if (std::find(m_pChildren.begin(), m_pChildren.end(), child) == m_pChildren.end())
 	{
 		m_pChildren.emplace_back(child);
@@ -132,11 +124,13 @@ void dae::GameObject::AddChild(GameObject* child)
 
 }
 
-dae::TransformComponent& dae::GameObject::GetTransform()
-{
-	return *m_pTransform;
-}
+//dae::TransformComponent& dae::GameObject::GetTransform()
+//{
+//	return *m_pTransform;
+//}
 
+
+//move to transform comp..?
 const glm::vec3& dae::GameObject::GetWorldPosition()
 {
 	UpdateWorldPosition();

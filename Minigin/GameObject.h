@@ -59,7 +59,7 @@ namespace dae
 		GameObject* GetChildAt(unsigned int index);
 		bool IsChild(GameObject* potentialChild) const;
 
-		TransformComponent& GetTransform();
+		//TransformComponent& GetTransform();
 		const glm::vec3& GetWorldPosition();
 		void SetLocalPosition(const glm::vec3& pos);
 		const glm::vec3& GetLocalPosition();
@@ -67,7 +67,7 @@ namespace dae
 
 	private:
 		std::vector<std::unique_ptr<Component>> m_Components;
-		TransformComponent* m_pTransform = nullptr;
+		//TransformComponent* m_pTransform = nullptr;
 
 		//w2
 		void UpdateWorldPosition();

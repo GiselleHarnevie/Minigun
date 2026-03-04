@@ -3,8 +3,8 @@
 #include "TextComponent.h"
 #include <iostream>
 
-dae::FPSComponent::FPSComponent(GameObject* gameObject)
-	: Component(gameObject),
+dae::FPSComponent::FPSComponent(GameObject* owner)
+	: Component(owner),
 	m_FPS{},
 	m_FPSTimer{ },
 	m_FrameCount{}

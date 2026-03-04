@@ -7,7 +7,7 @@ namespace dae
 	class FPSComponent :public Component
 	{
 	public:
-		FPSComponent(GameObject* gameObject);
+		FPSComponent(GameObject* owner);
 		virtual ~FPSComponent() = default;
 
 		// Inherited via Component
