@@ -17,7 +17,6 @@ endif()
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/Font.cpp
   Minigin/GameObject.cpp
-  Minigin/InputManager.cpp
   Minigin/Main.cpp
   Minigin/Minigin.cpp
   Minigin/Renderer.cpp
@@ -31,7 +30,13 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/Components/FPSComponent.cpp
   Minigin/Components/Component.cpp
   Minigin/Components/RotatorComponent.cpp 
-  Minigin/Components/ThrashTheCacheComponent.cpp)
+  Minigin/Components/ThrashTheCacheComponent.cpp
+  Minigin/Components/MoveComponent.cpp
+  Minigin/Components/InputComponent.cpp
+  Minigin/InputManager.cpp
+  Minigin/Command.cpp
+  Minigin/MoveCommand.cpp 
+  Minigin/Gamepad.cpp)
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
@@ -173,6 +178,9 @@ target_link_libraries("${TARGET_NAME}" PUBLIC
   ${VLD_LIBRARIES}
 )
 
+if(WIN32)
+  target_link_libraries(${TARGET_NAME} PRIVATE Xinput)
+endif()
 
 if(MSVC)
   # compile at warning level 4 + treat warnings as errors

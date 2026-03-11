@@ -15,6 +15,10 @@
 #include "Components/TextureComponent.h"
 #include "Components/RotatorComponent.h"
 #include "Components/ThrashTheCacheComponent.h"
+#include "Components/MoveComponent.h"
+#include "Components/InputComponent.h"
+#include "InputManager.h"
+#include "Command.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -23,6 +27,7 @@ static void load()
 {
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	auto smallFont = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 15);
 
 	auto go = std::make_unique<dae::GameObject>();
 	go->AddComponent<dae::TextureComponent>("background.png");
@@ -64,12 +69,25 @@ static void load()
 	child->SetParent(msPacmanPtr, false);
 	scene.Add(std::move(child));*/
 
-	//scene.Remove(*pivotPtr);
 
 	//w3
-	auto imguiPlot = std::make_unique<dae::GameObject>();
+	/*auto imguiPlot = std::make_unique<dae::GameObject>();
 	imguiPlot->AddComponent<dae::ThrashTheCacheComponent>();
-	scene.Add(std::move(imguiPlot));
+	scene.Add(std::move(imguiPlot));*/
+
+	//w4
+	auto text = std::make_unique<dae::GameObject>();
+	text->AddComponent<dae::TextComponent>("WASD to move", smallFont, SDL_Color{ 255, 255, 255, 255 });
+	text->SetLocalPosition(glm::vec3{ 10, 50 ,0 });
+	scene.Add(std::move(text));
+
+	auto player = std::make_unique<dae::GameObject>();
+	player->AddComponent<dae::TextureComponent>("MsPacman.png");
+	player->AddComponent<dae::MoveComponent>(250.f);
+	player->AddComponent<dae::InputComponent>();
+	player->SetLocalPosition(glm::vec3{ 100, 100 ,0 });
+	scene.Add(std::move(player));
+
 
 }
 

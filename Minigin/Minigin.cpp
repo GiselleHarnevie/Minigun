@@ -17,7 +17,6 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
-//#include "TextObject.h"
 
 using namespace std::chrono;
 
@@ -118,7 +117,9 @@ void dae::Minigin::RunOneFrame()
 	lastTime = currentTime;
 	lag += deltaTime;
 
-	m_quit = !InputManager::GetInstance().ProcessInput();
+	//TODO:input
+	m_quit = !InputManager::GetInstance().ProcessInput(deltaTime);
+
 	while (lag >= fixed_time_step)
 	{
 		SceneManager::GetInstance().FixedUpdate(fixed_time_step);
