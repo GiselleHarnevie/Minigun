@@ -40,6 +40,7 @@ bool dae::InputManager::ProcessInput(float deltaTime)
 				}
 			}
 		}
+		
 
 
 		const bool* keyboard{ SDL_GetKeyboardState(nullptr) };

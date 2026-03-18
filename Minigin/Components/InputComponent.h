@@ -1,10 +1,12 @@
 #pragma once
 #include "Component.h"
-#include "MoveCommand.h"
+#include <memory>
 
 namespace dae
 {
-
+	class MoveCommand;
+	class KillCommand;
+	class PickUpCommand;
 	class InputComponent : public Component
 	{
 	public:
@@ -23,6 +25,11 @@ namespace dae
 		MoveCommand* m_pMoveDown;
 		MoveCommand* m_pMoveRight;
 		MoveCommand* m_pMoveLeft;
+
+		KillCommand* m_pKillPlayer;
+
+		PickUpCommand* m_pPickUpSmall;
+		PickUpCommand* m_pPickUpBig;
 	};
 
 }

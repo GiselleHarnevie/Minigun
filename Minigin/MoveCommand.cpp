@@ -4,15 +4,23 @@
 
 
 
-dae::MoveCommand::MoveCommand(GameObject* gameObject, const glm::vec2& direction)
+dae::MoveCommand::MoveCommand(GameObject* gameObject, const glm::vec2& direction, float speed)
 	:m_pGameObject{gameObject},
-	m_Direction{direction}
+	m_Direction{direction},
+	m_Speed{speed}
 {
 
 }
 
 void dae::MoveCommand::Execute(float deltaTime)
 {
-	m_pGameObject->GetComponent<MoveComponent>()->Move(m_Direction, deltaTime);
+	glm::vec3 currentPos{ m_pGameObject->GetLocalPosition() };
+
+	m_pGameObject->SetLocalPosition(
+		glm::vec3{ currentPos.x + (m_Direction.x * m_Speed * deltaTime),
+		currentPos.y + (m_Direction.y * m_Speed * deltaTime),
+		currentPos.z
+		});
+
 }
 
