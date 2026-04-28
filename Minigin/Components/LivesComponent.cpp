@@ -24,7 +24,6 @@ int dae::LivesComponent::GetLivesLeft() const
 	return m_CurrentLivesLeft;
 }
 
-
 void dae::LivesComponent::FixedUpdate(const float)
 {
 

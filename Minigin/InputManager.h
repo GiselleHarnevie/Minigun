@@ -5,6 +5,8 @@
 #include <SDL3/SDL.h>
 #include <memory>
 #include "Command.h"
+#include "Gamepad.h"
+#include <array>
 
 namespace dae
 {
@@ -13,7 +15,7 @@ namespace dae
 		Pressed = 0,
 		Released = 1,
 		Held = 2
-	};
+	}; 
 
 	class InputManager final : public Singleton<InputManager>
 	{
@@ -31,11 +33,26 @@ namespace dae
 		bool ProcessInput(float deltaTime);
 		void BindCommand(SDL_Scancode key, InputState state, Command* command);
 
+		//BIND XINPUT
+		void BindCommand(int gamepadIndex, unsigned int button, InputState state, Command* command);
+
+		//UNBIND COMMAND
+		void UnbindCommand();
+
+		void AddGamepad(int index);
+
+		dae::Gamepad* GetGamepad(int index);
+
 	private:
 		std::vector<std::unique_ptr<Command>> m_Commands;
 
 		std::unordered_map<SDL_Scancode, std::unordered_map<InputState, Command*>> m_KeyboardBindings;
-		std::unordered_map<unsigned int, std::unordered_map<InputState, Command*>> m_GamepadBindings;
+		
+		using StateMap = std::unordered_map<InputState, Command*>;
+		using ButtonMap = std::unordered_map<unsigned int, StateMap>;
+
+		std::array<ButtonMap, 4> m_GamepadBindings;
+		std::array<std::unique_ptr<Gamepad>,4> m_Gamepads;
 	};
 
 }

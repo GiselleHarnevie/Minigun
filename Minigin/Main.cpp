@@ -15,7 +15,6 @@
 #include "Components/TextureComponent.h"
 #include "Components/RotatorComponent.h"
 #include "Components/ThrashTheCacheComponent.h"
-//#include "Components/MoveComponent.h"
 #include "Components/InputComponent.h"
 #include "InputManager.h"
 #include "Command.h"
@@ -25,6 +24,10 @@
 #include "Components/ScoreComponent.h"
 #include "Components/ScoreUIComponent.h"
 
+#include <windows.h>
+#include <Xinput.h>
+#include <string>
+
 #include <filesystem>
 namespace fs = std::filesystem;
 
@@ -32,7 +35,7 @@ static void load()
 {
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto smallFont = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 15);
+	auto smallFont = dae::ResourceManager::GetInstance().LoadFont("Newyear Coffee.otf", 15);
 
 	auto go = std::make_unique<dae::GameObject>();
 	go->AddComponent<dae::TextureComponent>("background.png");
@@ -74,7 +77,6 @@ static void load()
 	child->SetParent(msPacmanPtr, false);
 	scene.Add(std::move(child));*/
 
-
 	//w3
 	/*auto imguiPlot = std::make_unique<dae::GameObject>();
 	imguiPlot->AddComponent<dae::ThrashTheCacheComponent>();
@@ -82,47 +84,68 @@ static void load()
 
 	//w4
 	auto text = std::make_unique<dae::GameObject>();
-	text->AddComponent<dae::TextComponent>("WASD to move, C to Kill Self, Z and X to pick pellets", smallFont, SDL_Color{ 255, 255, 255, 255 });
+	text->AddComponent<dae::TextComponent>("D-pad to move, X to Kill Self, A and B to pick pellets", smallFont, SDL_Color{ 255, 255, 255, 255 });
 	text->SetLocalPosition(glm::vec3{ 10, 60 ,0 });
 	scene.Add(std::move(text));
+
+	auto text2 = std::make_unique<dae::GameObject>();
+	text2->AddComponent<dae::TextComponent>("WASD to move, C to Kill Self, Z and X to pick pellets", smallFont, SDL_Color{ 255, 255, 255, 255 });
+	text2->SetLocalPosition(glm::vec3{ 10, 85 ,0 });
+	scene.Add(std::move(text2));
 
 	//w5
 	///Player One
 	auto livesDisplay = std::make_unique<dae::GameObject>();
 	livesDisplay->AddComponent<dae::TextComponent>("Lives", smallFont, SDL_Color{ 255,255,255,255 });
-	auto& livesDisplayComp = livesDisplay->AddComponent<dae::LivesUIComponent>(); //O
+	auto& livesDisplayComp = livesDisplay->AddComponent<dae::LivesUIComponent>();
 	livesDisplay->SetLocalPosition(glm::vec3{ 10,110,0 });
-	//auto* livesDisplayPtr = livesDisplay.get();
 	scene.Add(std::move(livesDisplay));
 
 	auto scoreDisplay = std::make_unique<dae::GameObject>();
 	scoreDisplay->AddComponent<dae::TextComponent>("S", smallFont, SDL_Color{ 255,255,255,255 });
-	auto& scoreDisplayComp = scoreDisplay->AddComponent<dae::ScoreUIComponent>(); //O
+	auto& scoreDisplayComp = scoreDisplay->AddComponent<dae::ScoreUIComponent>();
 	scoreDisplay->SetLocalPosition(glm::vec3{ 10,130,0 });
 	scene.Add(std::move(scoreDisplay));
 
 	auto player = std::make_unique<dae::GameObject>();
 	player->AddComponent<dae::TextureComponent>("MsPacman.png");
-	auto& livesComp = player->AddComponent<dae::LivesComponent>(3); //S
-	auto& scoreComp = player->AddComponent<dae::ScoreComponent>(); //S
-	player->AddComponent<dae::InputComponent>();
-	player->SetLocalPosition(glm::vec3{ 300, 100 ,0 });
-	//auto* playerPtr = player.get();
+	auto& livesComp = player->AddComponent<dae::LivesComponent>(5);
+	auto& scoreComp = player->AddComponent<dae::ScoreComponent>();
+	auto& inputP1 = player->AddComponent<dae::InputComponent>();
+	inputP1.UsingKeyboard();
+	player->SetLocalPosition(glm::vec3{ 400, 150 ,0 });
 	scene.Add(std::move(player));
 
 	//Observer
-	//auto* observer = livesDisplayPtr->GetComponent<dae::LivesUIComponent>();
-	//auto* subject = playerPtr->GetComponent<dae::LivesComponent>();
-	//observer->InitLivesTextDisplay(subject->GetLivesLeft());
-	//subject->m_Subject.AddObserver(observer);
 	livesDisplayComp.InitLivesTextDisplay(livesComp.GetLivesLeft());
 	livesComp.m_Subject.AddObserver(&livesDisplayComp);
-
 	scoreComp.m_Subject.AddObserver(&scoreDisplayComp);
 
-	///Player Two
-	//mannn..
+	//
+	auto livesDisplayTwo = std::make_unique<dae::GameObject>();
+	livesDisplayTwo->AddComponent<dae::TextComponent>("Lives", smallFont, SDL_Color{ 255,255,255,255 });
+	auto& livesDisplayCompTwo = livesDisplayTwo->AddComponent<dae::LivesUIComponent>();
+	livesDisplayTwo->SetLocalPosition(glm::vec3{ 10,160,0 });
+	scene.Add(std::move(livesDisplayTwo));
 
+	auto scoreDisplayTwo = std::make_unique<dae::GameObject>();
+	scoreDisplayTwo->AddComponent<dae::TextComponent>("S", smallFont, SDL_Color{ 255,255,255,255 });
+	auto& scoreDisplayCompTwo = scoreDisplayTwo->AddComponent<dae::ScoreUIComponent>();
+	scoreDisplayTwo->SetLocalPosition(glm::vec3{ 10,180,0 });
+	scene.Add(std::move(scoreDisplayTwo));
+
+	auto playerTwo = std::make_unique<dae::GameObject>();
+	playerTwo->AddComponent<dae::TextureComponent>("MsPacman.png");
+	auto& livesCompTwo = playerTwo->AddComponent<dae::LivesComponent>(5);
+	auto& scoreCompTwo = playerTwo->AddComponent<dae::ScoreComponent>();
+	auto& inputP2 = playerTwo->AddComponent<dae::InputComponent>();
+	inputP2.UsingGamepad(0);
+	playerTwo->SetLocalPosition(glm::vec3{ 600, 150 ,0 });
+	scene.Add(std::move(playerTwo));
+
+	livesDisplayCompTwo.InitLivesTextDisplay(livesCompTwo.GetLivesLeft());
+	livesCompTwo.m_Subject.AddObserver(&livesDisplayCompTwo);
+	scoreCompTwo.m_Subject.AddObserver(&scoreDisplayCompTwo);
 
 }
 

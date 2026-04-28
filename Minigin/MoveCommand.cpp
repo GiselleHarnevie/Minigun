@@ -1,5 +1,4 @@
 #include "MoveCommand.h"
-#include "Components/MoveComponent.h"
 #include "GameObject.h"
 
 

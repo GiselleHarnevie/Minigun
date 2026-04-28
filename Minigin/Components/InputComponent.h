@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 #include <memory>
+#include "InputManager.h"
+
 
 namespace dae
 {
@@ -13,13 +15,18 @@ namespace dae
 		InputComponent(GameObject* owner);
 		~InputComponent();
 
-		void HandleBinds();
+		void UsingKeyboard();
+
+
+		void UsingGamepad(int gamepadIndex);
 
 	private:
 		// Inherited via Component
 		void FixedUpdate(const float fixedTimeStep) override;
 		void Update(float elapsedSec) override;
 		void Render() const override;
+
+		dae::InputManager& m_Input = InputManager::GetInstance();
 
 		MoveCommand* m_pMoveUp;
 		MoveCommand* m_pMoveDown;

@@ -10,7 +10,7 @@ dae::ScoreComponent::ScoreComponent(GameObject* owner)
 }
 
 void dae::ScoreComponent::AddScore(int score)
-{
+{ 
 	m_CurrentScore += score;
 	m_Subject.NotifyObservers(EventsId::pickUp, this->GetOwner());
 }
