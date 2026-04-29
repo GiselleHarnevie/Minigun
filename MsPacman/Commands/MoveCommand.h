@@ -1,5 +1,5 @@
 #pragma once
-#include "Command.h"
+#include "Input/Command.h"
 #include <glm/glm.hpp>
 
 namespace dae

@@ -1,6 +1,6 @@
 #include "Subject.h"
 #include "Observer.h"
-#include "GameObject.h"
+#include "../GameObject.h"
 
 void dae::Subject::NotifyObservers(unsigned int event, GameObject* actor)
 {

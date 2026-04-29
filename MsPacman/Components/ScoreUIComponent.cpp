@@ -1,7 +1,7 @@
 #include "ScoreUIComponent.h"
 #include "GameObject.h"
 #include "TextComponent.h"
-#include "Event.h"
+#include "Observer/Event.h"
 #include "ScoreComponent.h"
 
 dae::ScoreUIComponent::ScoreUIComponent(GameObject* owner)

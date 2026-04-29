@@ -1,6 +1,6 @@
 #include "LivesUIComponent.h"
 #include "GameObject.h"
-#include "Event.h"
+#include "Observer/Event.h"
 #include "LivesComponent.h"
 
 dae::LivesUIComponent::LivesUIComponent(GameObject* owner)

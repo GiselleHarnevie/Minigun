@@ -1,5 +1,5 @@
 #pragma once
-#include "Singleton.h"
+#include "../Singleton.h"
 #include <vector>
 #include <unordered_map>
 #include <SDL3/SDL.h>

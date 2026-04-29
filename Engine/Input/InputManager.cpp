@@ -70,7 +70,7 @@ bool dae::InputManager::ProcessInput(float deltaTime)
 
 		ButtonMap& buttonMap = m_GamepadBindings[gamepad.get()->GetGamepadIndex()];
 
-		for (auto& [key,states]: buttonMap)
+		for (auto& [key, states] : buttonMap)
 		{
 			//if button pushed
 			if (gamepad->IsDownThisFrame(key))
@@ -141,6 +141,5 @@ void dae::InputManager::AddGamepad(int index)
 
 dae::Gamepad* dae::InputManager::GetGamepad(int index)
 {
-	if (index < 0 || index > 3) return;
 	return m_Gamepads[index].get();
 }

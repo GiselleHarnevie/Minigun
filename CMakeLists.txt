@@ -13,39 +13,48 @@ else()
   set(TARGET_PARAM WIN32)
 endif()
 
+add_library(Engine STATIC
+    Engine/Component.cpp
+    Engine/Font.cpp
+    Engine/Minigin.cpp
+    Engine/Renderer.cpp
+    Engine/ResourceManager.cpp
+    Engine/GameObject.cpp
+    "Engine/Scene.cpp"
+    "Engine/Observer/Observer.cpp"
+    "Engine/Observer/Subject.cpp"
+    "Engine/SceneManager.cpp"
+    "Engine/Texture2D.cpp"
+    "Engine/Input/InputManager.cpp"
+    "Engine/Input/Gamepad.cpp" 
+    "Engine/TextureComponent.cpp"
+    "Engine/TextComponent.cpp"
+ "Engine/Sound/ServiceLocator.cpp" 
+ "Engine/Sound/SoundSystem.cpp" 
+ "Engine/Sound/SDLSoundSystem.cpp")
+
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
-  Minigin/Font.cpp
-  Minigin/GameObject.cpp
-  Minigin/Main.cpp
-  Minigin/Minigin.cpp
-  Minigin/Renderer.cpp
-  Minigin/ResourceManager.cpp
-  Minigin/Scene.cpp
-  Minigin/SceneManager.cpp
-  Minigin/Texture2D.cpp
-  Minigin/Components/TransformComponent.cpp
-  Minigin/Components/TextureComponent.cpp
-  Minigin/Components/TextComponent.cpp
-  Minigin/Components/FPSComponent.cpp
-  Minigin/Components/Component.cpp
-  Minigin/Components/RotatorComponent.cpp 
-  Minigin/Components/ThrashTheCacheComponent.cpp
-  Minigin/Components/MoveComponent.cpp
-  Minigin/Components/InputComponent.cpp
-  Minigin/InputManager.cpp
-  Minigin/Command.cpp
-  Minigin/MoveCommand.cpp 
-  Minigin/Gamepad.cpp 
-  "Minigin/Observer.cpp" 
-  "Minigin/Components/PlayerComponent.cpp" 
-  "Minigin/Subject.cpp" 
-  "Minigin/Components/LivesComponent.cpp" 
-  "Minigin/Components/ScoreComponent.cpp" 
-  "Minigin/KillCommand.cpp" "Minigin/Components/LivesUIComponent.cpp" "Minigin/PickUpCommand.cpp" "Minigin/Components/ScoreUIComponent.cpp")
+  MsPacman/Main.cpp
+  MsPacman/Components/FPSComponent.cpp
+  MsPacman/Components/RotatorComponent.cpp 
+  MsPacman/Components/ThrashTheCacheComponent.cpp
+  MsPacman/Components/InputComponent.cpp
+  MsPacman/Commands/MoveCommand.cpp
+  MsPacman/Commands/KillCommand.cpp
+  MsPacman/Commands/PickUpCommand.cpp
+  MsPacman/Components/PlayerComponent.cpp 
+  MsPacman/Components/LivesComponent.cpp
+  MsPacman/Components/ScoreComponent.cpp 
+  MsPacman/Components/LivesUIComponent.cpp
+  MsPacman/Components/ScoreUIComponent.cpp
+)
+
+target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/MsPacman)
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
+target_compile_features(Engine PUBLIC cxx_std_20)
 
 include(FetchContent)
 # add glm
@@ -119,6 +128,7 @@ if(NOT SDL3_ttf_FOUND)
   endif()
 endif()
 
+
 # Dear Imgui
 FetchContent_Declare(
   imgui
@@ -167,25 +177,30 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/steam")
 find_package(Steamworks QUIET)
 
 target_include_directories("${TARGET_NAME}" PUBLIC
-  ${CMAKE_SOURCE_DIR}/Minigin/
   ${glm_SOURCE_DIR}
   ${sdl3_SOURCE_DIR}/include
   ${sdl3_image_SOURCE_DIR}/include
   ${sdl3_ttf_SOURCE_DIR}/include
   ${imgui_SOURCE_DIR}
   ${VLD_INCLUDE_DIR}
+  ${CMAKE_SOURCE_DIR}/Engine
 )
 
-target_link_libraries("${TARGET_NAME}" PUBLIC
+target_link_libraries(Engine PUBLIC
   SDL3::SDL3
   SDL3_ttf::SDL3_ttf
   glm::glm
   imgui
   ${VLD_LIBRARIES}
+  Xinput
+)
+
+target_link_libraries("${TARGET_NAME}" PRIVATE
+Engine
 )
 
 if(WIN32)
-  target_link_libraries(${TARGET_NAME} PRIVATE Xinput)
+  
 endif()
 
 if(MSVC)

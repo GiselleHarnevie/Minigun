@@ -1,8 +1,8 @@
 #include "InputComponent.h"
-#include "InputManager.h"
-#include "MoveCommand.h"
-#include "KillCommand.h"
-#include "PickUpCommand.h"
+#include "Input/InputManager.h"
+#include "Commands/MoveCommand.h"
+#include "Commands/KillCommand.h"
+#include "Commands/PickUpCommand.h"
 #include <windows.h>
 #include <Xinput.h>
 

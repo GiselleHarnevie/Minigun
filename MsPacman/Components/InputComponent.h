@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 #include <memory>
-#include "InputManager.h"
+#include "Input/InputManager.h"
 
 
 namespace dae

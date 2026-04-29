@@ -1,8 +1,8 @@
 #include "LivesComponent.h"
 #include "GameObject.h"
 #include "TextComponent.h"
-#include "Event.h"
-#include "Sdbm.h"
+#include "Observer/Event.h"
+#include "Observer/Sdbm.h"
 
 dae::LivesComponent::LivesComponent(GameObject* owner, int livesAmount)
 	: Component(owner),

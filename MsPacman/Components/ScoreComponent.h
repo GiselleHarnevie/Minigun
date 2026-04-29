@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "TextComponent.h"
-#include "Subject.h"
+#include "Observer/Subject.h"
 
 namespace dae
 {

@@ -4,8 +4,8 @@
 #include <vector>
 #include <typeindex>
 #include <type_traits>
-#include "Components/TransformComponent.h"
-#include "Components/Component.h"
+#include "TransformComponent.h"
+#include "Component.h"
 #include <algorithm>
 
 namespace dae

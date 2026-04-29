@@ -10,19 +10,21 @@
 #include "ResourceManager.h"
 #include "Scene.h"
 #include "GameObject.h"
-#include "Components/TextComponent.h"
+#include "TextComponent.h"
 #include "Components/FPSComponent.h"
-#include "Components/TextureComponent.h"
+#include "TextureComponent.h"
 #include "Components/RotatorComponent.h"
 #include "Components/ThrashTheCacheComponent.h"
 #include "Components/InputComponent.h"
-#include "InputManager.h"
-#include "Command.h"
+#include "Input/InputManager.h"
+#include "Input/Command.h"
 #include "Components/PlayerComponent.h"
 #include "Components/LivesComponent.h"
 #include "Components/LivesUIComponent.h"
 #include "Components/ScoreComponent.h"
 #include "Components/ScoreUIComponent.h"
+#include "../Engine/Sound/ServiceLocator.h"
+#include "../Engine/Sound/SDLSoundSystem.h"
 
 #include <windows.h>
 #include <Xinput.h>
@@ -36,6 +38,10 @@ static void load()
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto smallFont = dae::ResourceManager::GetInstance().LoadFont("Newyear Coffee.otf", 15);
+
+	dae::ServiceLocator::RegisterSoundSystem(std::make_unique<dae::SDLSoundSystem>());
+	auto& ss = dae::ServiceLocator::GetSoundSystem();
+	ss.Play(1, 100);
 
 	auto go = std::make_unique<dae::GameObject>();
 	go->AddComponent<dae::TextureComponent>("background.png");

@@ -1,6 +1,6 @@
 #include "ScoreComponent.h"
 #include "GameObject.h"
-#include "Event.h"
+#include "Observer/Event.h"
 
 dae::ScoreComponent::ScoreComponent(GameObject* owner)
 	: Component(owner)

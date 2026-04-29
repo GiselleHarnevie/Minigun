@@ -1,5 +1,5 @@
 #pragma once
-#include "Components/Component.h"
+#include "Component.h"
 #include "GameObject.h"
 #include <memory>
 #include <SDL3/SDL_pixels.h>
