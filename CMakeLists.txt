@@ -29,9 +29,11 @@ add_library(Engine STATIC
     "Engine/Input/Gamepad.cpp" 
     "Engine/TextureComponent.cpp"
     "Engine/TextComponent.cpp"
- "Engine/Sound/ServiceLocator.cpp" 
- "Engine/Sound/SoundSystem.cpp" 
- "Engine/Sound/SDLSoundSystem.cpp")
+    "Engine/Sound/ServiceLocator.cpp" 
+    "Engine/Sound/SoundSystem.cpp" 
+    "Engine/Sound/SDLSoundSystem.cpp" 
+    "Engine/State/StateMachine.cpp"
+)
 
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
@@ -48,6 +50,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   MsPacman/Components/ScoreComponent.cpp 
   MsPacman/Components/LivesUIComponent.cpp
   MsPacman/Components/ScoreUIComponent.cpp
+  MsPacman/Components/GhostComponent.cpp
+  MsPacman/States/GhostStates.cpp
 )
 
 target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/MsPacman)
