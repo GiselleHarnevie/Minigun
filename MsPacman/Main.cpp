@@ -26,8 +26,12 @@
 #include "../Engine/Sound/ServiceLocator.h"
 #include "../Engine/Sound/SDLSoundSystem.h"
 
+#ifdef _WIN32
 #include <windows.h>
 #include <Xinput.h>
+#endif // _WIN32
+
+
 #include <string>
 
 #include <filesystem>

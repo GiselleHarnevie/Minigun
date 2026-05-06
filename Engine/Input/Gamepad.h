@@ -1,15 +1,19 @@
 #pragma once
-#include <windows.h>
-#include <Xinput.h>
+#include <memory>
 
 namespace dae
 {
-	
+
 	class Gamepad
 	{
 	public:
 		Gamepad(int gamepadIndex);
 		~Gamepad();
+
+		Gamepad(const Gamepad& other) = delete;
+		Gamepad(Gamepad&& other) = default;
+		Gamepad& operator=(const Gamepad& other) = delete;
+		Gamepad& operator=(Gamepad&& other) = default;
 
 		bool CheckGamepadConnected() const;
 		void ProcessGamepadInput();
@@ -19,12 +23,11 @@ namespace dae
 		bool IsUpThisFrame(unsigned int button) const;
 		bool IsPressed(unsigned int button) const;
 	private:
-		int m_ControllerIndex;
-		XINPUT_STATE m_CurrentState;
-		XINPUT_STATE m_PreviousState;
-
-		int m_ButtonsPressedThisFrame;
-		int m_ButtonsReleasedThisFrame;
+		//pimpl
+		class Impl;
+		std::unique_ptr<Impl> m_pImpl;
 	};
+
+
 
 }

@@ -3,8 +3,6 @@
 #include "Commands/MoveCommand.h"
 #include "Commands/KillCommand.h"
 #include "Commands/PickUpCommand.h"
-#include <windows.h>
-#include <Xinput.h>
 
 dae::InputComponent::InputComponent(GameObject* owner)
 	:Component(owner)
@@ -43,13 +41,13 @@ void dae::InputComponent::UsingGamepad(int index)
 {
 	m_Input.AddGamepad(index);
 
-	m_Input.BindCommand(index, XINPUT_GAMEPAD_DPAD_UP, InputState::Held, m_pMoveUp);
-	m_Input.BindCommand(index, XINPUT_GAMEPAD_DPAD_DOWN, InputState::Held, m_pMoveDown);
-	m_Input.BindCommand(index, XINPUT_GAMEPAD_DPAD_LEFT, InputState::Held, m_pMoveLeft);
-	m_Input.BindCommand(index, XINPUT_GAMEPAD_DPAD_RIGHT, InputState::Held, m_pMoveRight);
-	m_Input.BindCommand(index, XINPUT_GAMEPAD_X, InputState::Pressed, m_pKillPlayer);
-	m_Input.BindCommand(index, XINPUT_GAMEPAD_A, InputState::Pressed, m_pPickUpSmall);
-	m_Input.BindCommand(index, XINPUT_GAMEPAD_B, InputState::Pressed, m_pPickUpBig);
+	m_Input.BindCommand(index, static_cast<unsigned int>(GamepadButton::DPAD_UP), InputState::Held, m_pMoveUp);
+	m_Input.BindCommand(index, static_cast<unsigned int>(GamepadButton::DPAD_DOWN), InputState::Held, m_pMoveDown);
+	m_Input.BindCommand(index, static_cast<unsigned int>(GamepadButton::DPAD_LEFT), InputState::Held, m_pMoveLeft);
+	m_Input.BindCommand(index, static_cast<unsigned int>(GamepadButton::DPAD_RIGHT), InputState::Held, m_pMoveRight);
+	m_Input.BindCommand(index, static_cast<unsigned int>(GamepadButton::X), InputState::Pressed, m_pKillPlayer);
+	m_Input.BindCommand(index, static_cast<unsigned int>(GamepadButton::A), InputState::Pressed, m_pPickUpSmall);
+	m_Input.BindCommand(index, static_cast<unsigned int>(GamepadButton::B), InputState::Pressed, m_pPickUpBig);
 
 
 }

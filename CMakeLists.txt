@@ -192,7 +192,6 @@ target_link_libraries(Engine PUBLIC
   glm::glm
   imgui
   ${VLD_LIBRARIES}
-  Xinput
 )
 
 target_link_libraries("${TARGET_NAME}" PRIVATE
@@ -200,7 +199,7 @@ Engine
 )
 
 if(WIN32)
-  
+  target_link_libraries(Engine PUBLIC Xinput)
 endif()
 
 if(MSVC)
