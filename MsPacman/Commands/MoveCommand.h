@@ -8,7 +8,7 @@ namespace dae
 	class MoveCommand :public Command
 	{
 	public:
-		MoveCommand(GameObject* gameObject, const glm::vec2& direction, float speed);
+		MoveCommand(GameObject* gameObject, const glm::vec2& direction);
 		virtual ~MoveCommand() = default;
 
 
@@ -18,6 +18,6 @@ namespace dae
 
 		GameObject* m_pGameObject;
 		glm::vec2 m_Direction;
-		float m_Speed;
+		//float m_Speed;
 	};
 }

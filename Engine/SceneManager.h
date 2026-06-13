@@ -13,12 +13,15 @@ namespace dae
 	public:
 		Scene& CreateScene();
 
+
 		void Update(float deltaTime);
 		void FixedUpdate(float fixedTimeStep);
 		void Render();
+		void SetActiveScene(int index);
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
 		std::vector<std::unique_ptr<Scene>> m_scenes{};
+		int m_activeSceneIndex{ 0 };
 	};
 }

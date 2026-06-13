@@ -50,6 +50,8 @@ namespace dae
 			return ptr;
 		}
 
+	
+
 		bool ProcessInput(float deltaTime);
 		void BindCommand(SDL_Scancode key, InputState state, Command* command);
 

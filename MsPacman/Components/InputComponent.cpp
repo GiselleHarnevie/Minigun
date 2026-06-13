@@ -7,10 +7,10 @@
 dae::InputComponent::InputComponent(GameObject* owner)
 	:Component(owner)
 {
-	m_pMoveUp = m_Input.AddCommand<MoveCommand>(owner, glm::vec2{ 0.f,-1.f }, 200.f);
-	m_pMoveDown = m_Input.AddCommand<MoveCommand>(owner, glm::vec2{ 0.f,1.f }, 200.f);
-	m_pMoveLeft = m_Input.AddCommand<MoveCommand>(owner, glm::vec2{ -1.f,0.f }, 200.f);
-	m_pMoveRight = m_Input.AddCommand<MoveCommand>(owner, glm::vec2{ 1.f,0.f }, 200.f);
+	m_pMoveUp = m_Input.AddCommand<MoveCommand>(owner, glm::vec2{ 0.f,-1.f });
+	m_pMoveDown = m_Input.AddCommand<MoveCommand>(owner, glm::vec2{ 0.f,1.f });
+	m_pMoveLeft = m_Input.AddCommand<MoveCommand>(owner, glm::vec2{ -1.f,0.f });
+	m_pMoveRight = m_Input.AddCommand<MoveCommand>(owner, glm::vec2{ 1.f,0.f });
 
 	m_pKillPlayer = m_Input.AddCommand<KillCommand>(owner);
 

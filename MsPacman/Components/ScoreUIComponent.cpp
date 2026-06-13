@@ -13,7 +13,7 @@ dae::ScoreUIComponent::ScoreUIComponent(GameObject* owner)
 
 void dae::ScoreUIComponent::InitScoreTextDisplay()
 {
-	m_pTextComponent->SetText("Score: " + std::to_string(0));
+	m_pTextComponent->SetText(std::to_string(00));
 }
 
 void dae::ScoreUIComponent::FixedUpdate(const float)
@@ -32,6 +32,6 @@ void dae::ScoreUIComponent::OnNotify(unsigned int event, GameObject* actor)
 {
 	if (event == EventsId::pickUp)
 	{
-		m_pTextComponent->SetText("Score: " + std::to_string(actor->GetComponent<ScoreComponent>()->GetScore()));
+		m_pTextComponent->SetText(std::to_string(actor->GetComponent<ScoreComponent>()->GetScore()));
 	}
 }

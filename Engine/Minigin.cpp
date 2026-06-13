@@ -21,8 +21,8 @@
 using namespace std::chrono;
 
 SDL_Window* g_window{};
-const int ms_per_frame = 16;
-const float fixed_time_step = 1.0f / 60.0f;
+const int MS_PER_FRAME = 16;
+const float FIXED_TIME_STEP = 1.0f / 60.0f;
 
 void LogSDLVersion(const std::string& message, int major, int minor, int patch)
 {
@@ -60,7 +60,7 @@ void PrintSDLVersion()
 	LogSDLVersion("Linked with SDL_ttf ", SDL_VERSIONNUM_MAJOR(version), SDL_VERSIONNUM_MINOR(version), SDL_VERSIONNUM_MICRO(version));
 }
 
-dae::Minigin::Minigin(const std::filesystem::path& dataPath)
+dae::Minigin::Minigin(const std::filesystem::path& dataPath, int windowWidth, int windowHeight)
 {
 	PrintSDLVersion();
 
@@ -72,8 +72,8 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 
 	g_window = SDL_CreateWindow(
 		"Programming 4 assignment",
-		1024,
-		576,
+		windowWidth,
+		windowHeight,
 		SDL_WINDOW_OPENGL
 	);
 	if (g_window == nullptr)
@@ -120,15 +120,15 @@ void dae::Minigin::RunOneFrame()
 	//TODO:input
 	m_quit = !InputManager::GetInstance().ProcessInput(deltaTime);
 
-	while (lag >= fixed_time_step)
+	while (lag >= FIXED_TIME_STEP)
 	{
-		SceneManager::GetInstance().FixedUpdate(fixed_time_step);
-		lag -= fixed_time_step;
+		SceneManager::GetInstance().FixedUpdate(FIXED_TIME_STEP);
+		lag -= FIXED_TIME_STEP;
 	}
 	SceneManager::GetInstance().Update(deltaTime);
 	Renderer::GetInstance().Render();
 
-	const auto sleepTime = currentTime + milliseconds(ms_per_frame) - high_resolution_clock::now();
+	const auto sleepTime = currentTime + milliseconds(MS_PER_FRAME) - high_resolution_clock::now();
 
 	std::this_thread::sleep_for(sleepTime);
 }

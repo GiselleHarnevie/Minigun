@@ -12,7 +12,7 @@ dae::LivesUIComponent::LivesUIComponent(GameObject* owner)
 
 void dae::LivesUIComponent::InitLivesTextDisplay(int currentLivesLeft)
 {
-	m_pTextComponent->SetText("# lives: " + std::to_string(currentLivesLeft));
+	m_pTextComponent->SetText(std::to_string(currentLivesLeft));
 }
 
 void dae::LivesUIComponent::FixedUpdate(const float)
@@ -32,6 +32,6 @@ void dae::LivesUIComponent::OnNotify(unsigned int event, GameObject* actor)
 {
 	if (event == EventsId::playerDied)
 	{
-		m_pTextComponent->SetText("# lives: " + std::to_string(actor->GetComponent<LivesComponent>()->GetLivesLeft()));
+		m_pTextComponent->SetText(std::to_string(actor->GetComponent<LivesComponent>()->GetLivesLeft()));
 	}
 }

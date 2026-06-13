@@ -20,27 +20,26 @@ add_library(Engine STATIC
     Engine/Renderer.cpp
     Engine/ResourceManager.cpp
     Engine/GameObject.cpp
-    "Engine/Scene.cpp"
-    "Engine/Observer/Observer.cpp"
-    "Engine/Observer/Subject.cpp"
-    "Engine/SceneManager.cpp"
-    "Engine/Texture2D.cpp"
-    "Engine/Input/InputManager.cpp"
-    "Engine/Input/Gamepad.cpp" 
-    "Engine/TextureComponent.cpp"
-    "Engine/TextComponent.cpp"
-    "Engine/Sound/ServiceLocator.cpp" 
-    "Engine/Sound/SoundSystem.cpp" 
-    "Engine/Sound/SDLSoundSystem.cpp" 
-    "Engine/State/StateMachine.cpp"
+    Engine/Scene.cpp
+    Engine/Observer/Observer.cpp
+    Engine/Observer/Subject.cpp
+    Engine/SceneManager.cpp
+    Engine/Texture2D.cpp
+    Engine/Input/InputManager.cpp
+    Engine/Input/Gamepad.cpp
+    Engine/TextureComponent.cpp
+    Engine/TextComponent.cpp
+    Engine/Sound/ServiceLocator.cpp
+    Engine/Sound/SoundSystem.cpp
+    Engine/Sound/SDLSoundSystem.cpp
+    Engine/State/StateMachine.cpp
 )
 
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
   MsPacman/Main.cpp
   MsPacman/Components/FPSComponent.cpp
-  MsPacman/Components/RotatorComponent.cpp 
-  MsPacman/Components/ThrashTheCacheComponent.cpp
+  MsPacman/Components/RotatorComponent.cpp
   MsPacman/Components/InputComponent.cpp
   MsPacman/Commands/MoveCommand.cpp
   MsPacman/Commands/KillCommand.cpp
@@ -52,6 +51,13 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   MsPacman/Components/ScoreUIComponent.cpp
   MsPacman/Components/GhostComponent.cpp
   MsPacman/States/GhostStates.cpp
+  MsPacman/Level.cpp
+  MsPacman/LevelManager.cpp
+ "MsPacman/Components/AnimatorComponent.cpp"
+ "MsPacman/Components/MazeRendererComponent.cpp" 
+ "MsPacman/Commands/SkipLevelCommand.cpp" 
+ "MsPacman/Commands/MuteCommand.cpp" 
+ "MsPacman/HighScoreManager.cpp" 
 )
 
 target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/MsPacman)
@@ -132,7 +138,6 @@ if(NOT SDL3_ttf_FOUND)
   endif()
 endif()
 
-
 # Dear Imgui
 FetchContent_Declare(
   imgui
@@ -142,18 +147,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(imgui)
 
-# Imgui Plot
-include(FetchContent)
-# Optional: Set IMGUI_INCLUDE_DIR to the path of imgui sources, if different from the default. 
-FetchContent_Declare(
-    imgui_plot
-    GIT_REPOSITORY https://github.com/soulthreads/imgui-plot.git
-    GIT_TAG 0e55d88cde89fd27addf0c88563cc778b4fb4023
-    EXCLUDE_FROM_ALL
-)
-FetchContent_MakeAvailable(imgui_plot)
-target_include_directories(imgui_plot PUBLIC ${imgui_SOURCE_DIR})
-target_link_libraries(${TARGET_NAME} PRIVATE imgui_plot)
 
 add_library(imgui STATIC
   ${imgui_SOURCE_DIR}/imgui.cpp
@@ -170,6 +163,13 @@ target_link_libraries(imgui PUBLIC SDL3::SDL3)
 # enable c++20 features
 target_compile_features(imgui PUBLIC cxx_std_20)
 
+#add nlohhman json
+FetchContent_Declare(
+      json
+      GIT_REPOSITORY https://github.com/nlohmann/json
+      GIT_TAG v3.12.0
+    )
+FetchContent_MakeAvailable(json)
 
 if (WIN32)
   # Add VLD (Visual Leak Detector) for memory leak detection on Windows
@@ -196,6 +196,7 @@ target_link_libraries(Engine PUBLIC
   glm::glm
   imgui
   ${VLD_LIBRARIES}
+  nlohmann_json::nlohmann_json
 )
 
 target_link_libraries("${TARGET_NAME}" PRIVATE

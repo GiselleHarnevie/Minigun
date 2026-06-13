@@ -9,7 +9,7 @@ namespace dae
 	{
 		bool m_quit{};
 	public:
-		explicit Minigin(const std::filesystem::path& dataPath);
+		explicit Minigin(const std::filesystem::path& dataPath,int windowWidth, int windowHeight);
 		~Minigin();
 		void Run(const std::function<void()>& load);
 		void RunOneFrame();

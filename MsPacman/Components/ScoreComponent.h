@@ -22,3 +22,4 @@ namespace dae
 		int m_CurrentScore;
 	};
 }
+

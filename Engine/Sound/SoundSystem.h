@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 namespace dae
 {
@@ -8,9 +9,10 @@ namespace dae
 	public:
 		virtual ~SoundSystem() = default;
 	
+		virtual void LoadSound(const SoundId id, const std::string& path) = 0;
 		virtual void Play(const SoundId id, const float volume) = 0;
 		virtual void Stop(const SoundId id) = 0;
-		virtual void Mute(const SoundId id) = 0;
+		virtual void MuteAll() = 0;
 	private:
 
 	};
@@ -21,8 +23,13 @@ namespace dae
 
 	private:
 		// Inherited via SoundSystem
-		void Play(const SoundId id, const float volume) override;
-		void Stop(const SoundId id) override;
-		void Mute(const SoundId id) override;
+		void LoadSound(const SoundId , const std::string& ) override {};
+
+		void Play(const SoundId , const float ) override {};
+
+		void Stop(const SoundId ) override {};
+
+		void MuteAll() override {};
+
 	};
 }

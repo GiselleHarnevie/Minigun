@@ -14,7 +14,6 @@
 #include "Components/FPSComponent.h"
 #include "TextureComponent.h"
 #include "Components/RotatorComponent.h"
-#include "Components/ThrashTheCacheComponent.h"
 #include "Components/InputComponent.h"
 #include "Input/InputManager.h"
 #include "Input/Command.h"
@@ -25,6 +24,13 @@
 #include "Components/ScoreUIComponent.h"
 #include "../Engine/Sound/ServiceLocator.h"
 #include "../Engine/Sound/SDLSoundSystem.h"
+#include "LevelManager.h"
+#include "Components/MazeRendererComponent.h"
+#include "GameSettings.h"
+#include "Components/GhostComponent.h"
+#include "Commands/SkipLevelCommand.h"
+#include "Commands/MuteCommand.h"
+#include "HighScoreManager.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -35,95 +41,84 @@
 #include <string>
 
 #include <filesystem>
+#include <iostream>
 namespace fs = std::filesystem;
 
 static void load()
 {
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto smallFont = dae::ResourceManager::GetInstance().LoadFont("Newyear Coffee.otf", 15);
+	auto title = dae::ResourceManager::GetInstance().LoadFont("PressStart2p.ttf", 40);
+	auto text = dae::ResourceManager::GetInstance().LoadFont("PressStart2p.ttf", 12);
+	auto highlight = dae::ResourceManager::GetInstance().LoadFont("PressStart2p.ttf", 8);
+	dae::LevelManager::GetInstance().ReadLevelJson("Data/LevelData.json");
+	dae::HighScoreManager::GetInstance().Load();
+
+	auto* muteCmd = dae::InputManager::GetInstance().AddCommand<dae::MuteCommand>(nullptr);
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F2, dae::InputState::Pressed, muteCmd);
+
+	auto* skipCmd = dae::InputManager::GetInstance().AddCommand<dae::SkipLevelCommand>(nullptr);
+	dae::InputManager::GetInstance().BindCommand(SDL_SCANCODE_F1, dae::InputState::Pressed, skipCmd);
 
 	dae::ServiceLocator::RegisterSoundSystem(std::make_unique<dae::SDLSoundSystem>());
 	auto& ss = dae::ServiceLocator::GetSoundSystem();
 	ss.Play(1, 100);
 
+	//FPS
 	auto go = std::make_unique<dae::GameObject>();
-	go->AddComponent<dae::TextureComponent>("background.png");
-	scene.Add(std::move(go));
-
-	go = std::make_unique<dae::GameObject>();
-	go->AddComponent<dae::TextureComponent>("logo.png");
-	go->SetLocalPosition(glm::vec3{ 358, 180 ,0 });
-	scene.Add(std::move(go));
-
-	auto to = std::make_unique<dae::GameObject>();
-	to->AddComponent<dae::TextComponent>("Programming 4 Assignment", font, SDL_Color{ 255, 255, 0, 255 });
-	to->SetLocalPosition(glm::vec3{ 292, 20 ,0 });
-	scene.Add(std::move(to));
-
-	//w1
-	go = std::make_unique<dae::GameObject>();
-	go->AddComponent<dae::TextComponent>("F", font, SDL_Color{ 255, 255, 0, 255 });
+	go->AddComponent<dae::TextComponent>("F", highlight, SDL_Color{ 255, 255, 0, 255 });
 	go->AddComponent<dae::FPSComponent>();
-	go->SetLocalPosition(glm::vec3{ 10,10,0 });
+	go->SetLocalPosition(glm::vec3{ dae::WINDOW_WIDTH/2 - dae::TILE_SIZE,dae::WINDOW_HEIGHT - dae::TILE_SIZE,0 });
 	scene.Add(std::move(go));
 
-	//w2
-	/*auto pivot = std::make_unique<dae::GameObject>();
-	pivot->SetLocalPosition(glm::vec3{ 700,350,0 });
-	auto* pivotPtr = pivot.get();
-	scene.Add(std::move(pivot));
+	//GAMEPLAY SECTION
+	auto level = std::make_unique<dae::GameObject>();
+	level->AddComponent<dae::TextureComponent>("Level1.png");
+	level->AddComponent<dae::MazeRendererComponent>(dae::LevelManager::GetInstance().GetLevel(0));
+	level->SetLocalPosition(glm::vec3{ 0,dae::TOP_HUD_HEIGHT * dae::TILE_SIZE,0 });
+	scene.Add(std::move(level));
 
-	auto msPacman = std::make_unique<dae::GameObject>();
-	msPacman->SetParent(pivotPtr, false);
-	msPacman->AddComponent<dae::TextureComponent>("MsPacman.png");
-	msPacman->AddComponent<dae::RotatorComponent>(-10.f, 15.f);
-	auto* msPacmanPtr = msPacman.get();
-	scene.Add(std::move(msPacman));
-
-	auto child = std::make_unique<dae::GameObject>();
-	child->AddComponent<dae::TextureComponent>("MsPacman.png");
-	child->AddComponent<dae::RotatorComponent>(5.f, 50.f);
-	child->SetParent(msPacmanPtr, false);
-	scene.Add(std::move(child));*/
-
-	//w3
-	/*auto imguiPlot = std::make_unique<dae::GameObject>();
-	imguiPlot->AddComponent<dae::ThrashTheCacheComponent>();
-	scene.Add(std::move(imguiPlot));*/
-
-	//w4
-	auto text = std::make_unique<dae::GameObject>();
-	text->AddComponent<dae::TextComponent>("D-pad to move, X to Kill Self, A and B to pick pellets", smallFont, SDL_Color{ 255, 255, 255, 255 });
-	text->SetLocalPosition(glm::vec3{ 10, 60 ,0 });
-	scene.Add(std::move(text));
-
-	auto text2 = std::make_unique<dae::GameObject>();
-	text2->AddComponent<dae::TextComponent>("WASD to move, C to Kill Self, Z and X to pick pellets", smallFont, SDL_Color{ 255, 255, 255, 255 });
-	text2->SetLocalPosition(glm::vec3{ 10, 85 ,0 });
-	scene.Add(std::move(text2));
-
-	//w5
-	///Player One
+	//lives
 	auto livesDisplay = std::make_unique<dae::GameObject>();
-	livesDisplay->AddComponent<dae::TextComponent>("Lives", smallFont, SDL_Color{ 255,255,255,255 });
+	livesDisplay->AddComponent<dae::TextComponent>("Lives", text, SDL_Color{ 255,255,255,255 });
 	auto& livesDisplayComp = livesDisplay->AddComponent<dae::LivesUIComponent>();
-	livesDisplay->SetLocalPosition(glm::vec3{ 10,110,0 });
+	livesDisplay->SetLocalPosition(dae::GeneralTileToWorldPosition(dae::livesDisplayPos));
 	scene.Add(std::move(livesDisplay));
 
+	//Highscore title text (mid)
+	auto scoreText = std::make_unique<dae::GameObject>();
+	scoreText->AddComponent<dae::TextComponent>("HIGH SCORE", text, SDL_Color{ 255,255,255,255 });
+	scoreText->SetLocalPosition(dae::GeneralTileToWorldPosition(dae::HighscoreText));
+	scene.Add(std::move(scoreText));
+
+	//1Up text (left)
+	auto OneUpText = std::make_unique<dae::GameObject>();
+	OneUpText->AddComponent<dae::TextComponent>("1UP", text, SDL_Color{ 255,255,255,255 });
+	OneUpText->SetLocalPosition(dae::GeneralTileToWorldPosition(dae::OneUpText));
+	scene.Add(std::move(OneUpText));
+
+	//1Up text (right)
+	auto TwoUpText = std::make_unique<dae::GameObject>();
+	TwoUpText->AddComponent<dae::TextComponent>("2UP", text, SDL_Color{ 255,255,255,255 });
+	TwoUpText->SetLocalPosition(dae::GeneralTileToWorldPosition(dae::TwoUpText));
+	scene.Add(std::move(TwoUpText));
+
+	//curr score number (left)
 	auto scoreDisplay = std::make_unique<dae::GameObject>();
-	scoreDisplay->AddComponent<dae::TextComponent>("S", smallFont, SDL_Color{ 255,255,255,255 });
+	scoreDisplay->AddComponent<dae::TextComponent>("S", text, SDL_Color{ 255,255,255,255 });
 	auto& scoreDisplayComp = scoreDisplay->AddComponent<dae::ScoreUIComponent>();
-	scoreDisplay->SetLocalPosition(glm::vec3{ 10,130,0 });
+	scoreDisplay->SetLocalPosition(dae::GeneralTileToWorldPosition(dae::CurrentHighscoreNrPOne));
 	scene.Add(std::move(scoreDisplay));
 
+	auto* currentLevel = dae::LevelManager::GetInstance().GetLevel(0);
+	///Player One
 	auto player = std::make_unique<dae::GameObject>();
 	player->AddComponent<dae::TextureComponent>("MsPacman.png");
-	auto& livesComp = player->AddComponent<dae::LivesComponent>(5);
+	auto& livesComp = player->AddComponent<dae::LivesComponent>(4);
 	auto& scoreComp = player->AddComponent<dae::ScoreComponent>();
+	player->AddComponent<dae::PlayerComponent>(currentLevel);
+	auto* playerComp = player->GetComponent<dae::PlayerComponent>();
 	auto& inputP1 = player->AddComponent<dae::InputComponent>();
 	inputP1.UsingKeyboard();
-	player->SetLocalPosition(glm::vec3{ 400, 150 ,0 });
 	scene.Add(std::move(player));
 
 	//Observer
@@ -131,32 +126,25 @@ static void load()
 	livesComp.m_Subject.AddObserver(&livesDisplayComp);
 	scoreComp.m_Subject.AddObserver(&scoreDisplayComp);
 
-	//
-	auto livesDisplayTwo = std::make_unique<dae::GameObject>();
-	livesDisplayTwo->AddComponent<dae::TextComponent>("Lives", smallFont, SDL_Color{ 255,255,255,255 });
-	auto& livesDisplayCompTwo = livesDisplayTwo->AddComponent<dae::LivesUIComponent>();
-	livesDisplayTwo->SetLocalPosition(glm::vec3{ 10,160,0 });
-	scene.Add(std::move(livesDisplayTwo));
+	auto blinky = std::make_unique<dae::GameObject>();
+	blinky->AddComponent<dae::TextureComponent>("JustBlinkyTest.png");
+	blinky->AddComponent<dae::GhostComponent>(currentLevel, playerComp, dae::GhostType::Blinky, dae::BLINKY_START_WORLD);
+	scene.Add(std::move(blinky));
 
-	auto scoreDisplayTwo = std::make_unique<dae::GameObject>();
-	scoreDisplayTwo->AddComponent<dae::TextComponent>("S", smallFont, SDL_Color{ 255,255,255,255 });
-	auto& scoreDisplayCompTwo = scoreDisplayTwo->AddComponent<dae::ScoreUIComponent>();
-	scoreDisplayTwo->SetLocalPosition(glm::vec3{ 10,180,0 });
-	scene.Add(std::move(scoreDisplayTwo));
+	auto pinky = std::make_unique<dae::GameObject>();
+	pinky->AddComponent<dae::TextureComponent>("JustBlinkyTest.png");
+	pinky->AddComponent<dae::GhostComponent>(currentLevel, playerComp, dae::GhostType::Pinky, dae::PINKY_START_WORLD);
+	scene.Add(std::move(pinky));
 
-	auto playerTwo = std::make_unique<dae::GameObject>();
-	playerTwo->AddComponent<dae::TextureComponent>("MsPacman.png");
-	auto& livesCompTwo = playerTwo->AddComponent<dae::LivesComponent>(5);
-	auto& scoreCompTwo = playerTwo->AddComponent<dae::ScoreComponent>();
-	auto& inputP2 = playerTwo->AddComponent<dae::InputComponent>();
-	inputP2.UsingGamepad(0);
-	playerTwo->SetLocalPosition(glm::vec3{ 600, 150 ,0 });
-	scene.Add(std::move(playerTwo));
+	auto inky = std::make_unique<dae::GameObject>();
+	inky->AddComponent<dae::TextureComponent>("JustBlinkyTest.png");
+	inky->AddComponent<dae::GhostComponent>(currentLevel, playerComp, dae::GhostType::Inky, dae::INKY_START_WORLD);
+	scene.Add(std::move(inky));
 
-	livesDisplayCompTwo.InitLivesTextDisplay(livesCompTwo.GetLivesLeft());
-	livesCompTwo.m_Subject.AddObserver(&livesDisplayCompTwo);
-	scoreCompTwo.m_Subject.AddObserver(&scoreDisplayCompTwo);
-
+	auto sue = std::make_unique<dae::GameObject>();
+	sue->AddComponent<dae::TextureComponent>("JustBlinkyTest.png");
+	sue->AddComponent<dae::GhostComponent>(currentLevel, playerComp, dae::GhostType::Sue, dae::SUE_START_WORLD);
+	scene.Add(std::move(sue));
 }
 
 int main(int, char* []) {
@@ -167,7 +155,7 @@ int main(int, char* []) {
 	if (!fs::exists(data_location))
 		data_location = "../Data/";
 #endif
-	dae::Minigin engine(data_location);
+	dae::Minigin engine(data_location, dae::WINDOW_WIDTH, dae::WINDOW_HEIGHT);
 	engine.Run(load);
 	return 0;
 }
