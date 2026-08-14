@@ -1,5 +1,5 @@
-#include <SDL3/SDL.h>
 #include "InputManager.h"
+#include <SDL3/SDL.h>
 #include <backends/imgui_impl_sdl3.h>
 #include "Command.h"
 #include "Gamepad.h"
@@ -122,9 +122,14 @@ void dae::InputManager::BindCommand(int gamepadIndex, unsigned int button, Input
 }
 
 
-void dae::InputManager::UnbindCommand()
+void dae::InputManager::UnbindAllCommands()
 {
-
+	m_KeyboardBindings.clear();
+	
+	for (auto& buttonMap : m_GamepadBindings)
+	{
+		buttonMap.clear();
+	}
 }
 
 void dae::InputManager::AddGamepad(int index)

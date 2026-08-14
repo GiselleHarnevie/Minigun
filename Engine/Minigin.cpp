@@ -12,6 +12,7 @@
 #include <SDL3/SDL.h>
 //#include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3_mixer/SDL_mixer.h>
 #include "Minigin.h"
 #include "Input/InputManager.h"
 #include "SceneManager.h"
@@ -64,11 +65,24 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath, int windowWidth, in
 {
 	PrintSDLVersion();
 
-	if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
+	if (!SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
 	{
 		SDL_Log("Renderer error: %s", SDL_GetError());
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
+
+
+#if _DEBUG
+	AllocConsole();
+	auto err = freopen("CONOUT$", "wt", stdout);
+	if (!err)
+	{
+		throw std::runtime_error(std::string("Failed to load support for fonts: ") + SDL_GetError());
+	}
+	SetConsoleTitle("Debug Console");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED);
+
+#endif
 
 	g_window = SDL_CreateWindow(
 		"Programming 4 assignment",
@@ -81,6 +95,7 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath, int windowWidth, in
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
 
+
 	Renderer::GetInstance().Init(g_window);
 	ResourceManager::GetInstance().Init(dataPath);
 }
@@ -90,6 +105,10 @@ dae::Minigin::~Minigin()
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
+
+
+	MIX_Quit();
+	TTF_Quit();
 	SDL_Quit();
 }
 
@@ -117,7 +136,6 @@ void dae::Minigin::RunOneFrame()
 	lastTime = currentTime;
 	lag += deltaTime;
 
-	//TODO:input
 	m_quit = !InputManager::GetInstance().ProcessInput(deltaTime);
 
 	while (lag >= FIXED_TIME_STEP)

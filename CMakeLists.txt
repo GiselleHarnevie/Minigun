@@ -7,60 +7,69 @@ endif()
 
 if(EMSCRIPTEN)
   set(TARGET_NAME minigin_web)
-  set(TARGET_PARAM )
+  set(TARGET_PARAM)
 else()
   set(TARGET_NAME minigin)
   set(TARGET_PARAM WIN32)
 endif()
+# add WIN32 to TARGET_PARAM
 
 add_library(Engine STATIC
-    Engine/Component.cpp
-    Engine/Font.cpp
-    Engine/Minigin.cpp
-    Engine/Renderer.cpp
-    Engine/ResourceManager.cpp
-    Engine/GameObject.cpp
-    Engine/Scene.cpp
-    Engine/Observer/Observer.cpp
-    Engine/Observer/Subject.cpp
-    Engine/SceneManager.cpp
-    Engine/Texture2D.cpp
-    Engine/Input/InputManager.cpp
-    Engine/Input/Gamepad.cpp
-    Engine/TextureComponent.cpp
-    Engine/TextComponent.cpp
-    Engine/Sound/ServiceLocator.cpp
-    Engine/Sound/SoundSystem.cpp
-    Engine/Sound/SDLSoundSystem.cpp
-    Engine/State/StateMachine.cpp
-)
+  Engine/Component.cpp
+  Engine/Font.cpp
+  Engine/Minigin.cpp
+  Engine/Renderer.cpp
+  Engine/ResourceManager.cpp
+  Engine/GameObject.cpp
+  Engine/Scene.cpp
+  Engine/Observer/Observer.cpp
+  Engine/Observer/Subject.cpp
+  Engine/SceneManager.cpp
+  Engine/Texture2D.cpp
+  Engine/Input/InputManager.cpp
+  Engine/Input/Gamepad.cpp
+  Engine/TextureComponent.cpp
+  Engine/TextComponent.cpp
+  Engine/Sound/ServiceLocator.cpp
+  Engine/Sound/SoundSystem.cpp
+  Engine/Sound/SDLSoundSystem.cpp
+  Engine/State/StateMachine.cpp
+ "Engine/SpriteAnimationComponent.cpp" )
 
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
-  MsPacman/Main.cpp
-  MsPacman/Components/FPSComponent.cpp
-  MsPacman/Components/RotatorComponent.cpp
-  MsPacman/Components/InputComponent.cpp
-  MsPacman/Commands/MoveCommand.cpp
-  MsPacman/Commands/KillCommand.cpp
-  MsPacman/Commands/PickUpCommand.cpp
-  MsPacman/Components/PlayerComponent.cpp 
-  MsPacman/Components/LivesComponent.cpp
-  MsPacman/Components/ScoreComponent.cpp 
-  MsPacman/Components/LivesUIComponent.cpp
-  MsPacman/Components/ScoreUIComponent.cpp
-  MsPacman/Components/GhostComponent.cpp
-  MsPacman/States/GhostStates.cpp
-  MsPacman/Level.cpp
-  MsPacman/LevelManager.cpp
- "MsPacman/Components/AnimatorComponent.cpp"
- "MsPacman/Components/MazeRendererComponent.cpp" 
- "MsPacman/Commands/SkipLevelCommand.cpp" 
- "MsPacman/Commands/MuteCommand.cpp" 
- "MsPacman/HighScoreManager.cpp" 
-)
+  DigDug/Main.cpp
+  DigDug/Components/FPSComponent.cpp
+  DigDug/Components/RotatorComponent.cpp
+  DigDug/Components/InputComponent.cpp
+  DigDug/Commands/MoveCommand.cpp
+  DigDug/Commands/KillCommand.cpp
+  DigDug/Commands/PickUpCommand.cpp
+  DigDug/Components/PlayerComponent.cpp
+  DigDug/Components/LivesComponent.cpp
+  DigDug/Components/ScoreComponent.cpp
+  DigDug/Components/LivesUIComponent.cpp
+  DigDug/Components/ScoreUIComponent.cpp
+  "DigDug/Components/PookaComponent.cpp"
+  "DigDug/States/PookaStates.cpp"
+  DigDug/Level.cpp
+  DigDug/LevelManager.cpp
+  DigDug/Components/MazeRendererComponent.cpp
+  DigDug/Commands/SkipLevelCommand.cpp
+  DigDug/Commands/MuteCommand.cpp
+  DigDug/HighScoreManager.cpp
+  DigDug/DigDug.cpp 
+  "DigDug/GameState.cpp"
+   
+  "DigDug/Commands/StopCommand.cpp" 
+  "DigDug/Commands/MoveArrowCommand.cpp" 
+  "DigDug/Components/SelectionComponent.cpp"
+  "DigDug/Commands/ConfirmSelectionCommand.cpp" 
+  "DigDug/Commands/AttackCommand.cpp" 
+ "DigDug/Components/RoundUIComponent.cpp" 
+ "DigDug/Commands/BackToMenuCommand.cpp")
 
-target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/MsPacman)
+target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/DigDug)
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
@@ -82,7 +91,7 @@ endif()
 # Add SDL3
 find_package(SDL3 3.4 CONFIG QUIET)
 if(NOT SDL3_FOUND)
-  if (WIN32)
+  if(WIN32)
     FetchContent_Declare(
       SDL3
       URL https://www.libsdl.org/release/SDL3-devel-3.4.0-VC.zip
@@ -107,7 +116,7 @@ endif()
 # Add SDL3_ttf
 find_package(SDL3_ttf 3.2.2 CONFIG QUIET)
 if(NOT SDL3_ttf_FOUND)
-  if (WIN32)
+  if(WIN32)
     FetchContent_Declare(
       SDL3_ttf
       URL https://www.libsdl.org/projects/SDL_ttf/release/SDL3_ttf-devel-3.2.2-VC.zip
@@ -138,6 +147,32 @@ if(NOT SDL3_ttf_FOUND)
   endif()
 endif()
 
+# Add SDL_mixer
+find_package(SDL3_mixer 3.2.4 CONFIG QUIET)
+if(NOT SDL3_mixer_FOUND)
+  if(WIN32)
+    FetchContent_Declare(
+      SDL3_mixer
+      URL https://www.libsdl.org/projects/SDL_mixer/release/SDL3_mixer-devel-3.2.4-VC.zip
+      DOWNLOAD_NO_PROGRESS ON
+      DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
+    )
+    FetchContent_MakeAvailable(SDL3_mixer)
+    list(PREPEND CMAKE_PREFIX_PATH "${sdl3_mixer_SOURCE_DIR}")
+    find_package(SDL3_mixer)
+  else()
+    FetchContent_Declare(
+      SDL3_mixer
+      GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+      GIT_TAG release-3.2.4
+      GIT_SHALLOW TRUE
+      GIT_PROGRESS TRUE
+    )
+    FetchContent_MakeAvailable(SDL3_mixer)
+  endif()
+endif()
+
+
 # Dear Imgui
 FetchContent_Declare(
   imgui
@@ -147,7 +182,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(imgui)
 
-
 add_library(imgui STATIC
   ${imgui_SOURCE_DIR}/imgui.cpp
   ${imgui_SOURCE_DIR}/imgui_draw.cpp
@@ -156,7 +190,7 @@ add_library(imgui STATIC
   ${imgui_SOURCE_DIR}/imgui_demo.cpp
   ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
   ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp
-)
+ )
 
 target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${sdl3_SOURCE_DIR}/include)
 target_link_libraries(imgui PUBLIC SDL3::SDL3)
@@ -165,13 +199,13 @@ target_compile_features(imgui PUBLIC cxx_std_20)
 
 #add nlohhman json
 FetchContent_Declare(
-      json
-      GIT_REPOSITORY https://github.com/nlohmann/json
-      GIT_TAG v3.12.0
-    )
+  json
+  GIT_REPOSITORY https://github.com/nlohmann/json
+  GIT_TAG v3.12.0
+)
 FetchContent_MakeAvailable(json)
 
-if (WIN32)
+if(WIN32)
   # Add VLD (Visual Leak Detector) for memory leak detection on Windows
   find_package(VLD CONFIG)
 endif()
@@ -185,6 +219,7 @@ target_include_directories("${TARGET_NAME}" PUBLIC
   ${sdl3_SOURCE_DIR}/include
   ${sdl3_image_SOURCE_DIR}/include
   ${sdl3_ttf_SOURCE_DIR}/include
+  ${sdl3_mixer_SOURCE_DIR}/include
   ${imgui_SOURCE_DIR}
   ${VLD_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/Engine
@@ -193,6 +228,7 @@ target_include_directories("${TARGET_NAME}" PUBLIC
 target_link_libraries(Engine PUBLIC
   SDL3::SDL3
   SDL3_ttf::SDL3_ttf
+  SDL3_mixer::SDL3_mixer
   glm::glm
   imgui
   ${VLD_LIBRARIES}
@@ -200,7 +236,7 @@ target_link_libraries(Engine PUBLIC
 )
 
 target_link_libraries("${TARGET_NAME}" PRIVATE
-Engine
+  Engine
 )
 
 if(WIN32)
@@ -223,8 +259,8 @@ if(EMSCRIPTEN)
 
   # Additional settings for Emscripten build
   set_target_properties(${TARGET_NAME} PROPERTIES
-      COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"
-      LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS}"
+    COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"
+    LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS}"
   )
 
   add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
@@ -244,14 +280,15 @@ elseif(WIN32)
   set(SDL_RUNTIME_DLLS
     SDL3::SDL3
     SDL3_ttf::SDL3_ttf
+    SDL3_mixer::SDL3_mixer
   )
 
   foreach(dllTarget IN LISTS SDL_RUNTIME_DLLS)
     add_custom_command(
       TARGET ${TARGET_NAME} POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-          "$<TARGET_FILE:${dllTarget}>"
-          "$<TARGET_FILE_DIR:${TARGET_NAME}>"
+      "$<TARGET_FILE:${dllTarget}>"
+      "$<TARGET_FILE_DIR:${TARGET_NAME}>"
       VERBATIM
     )
   endforeach()
@@ -301,7 +338,7 @@ elseif(APPLE)
     COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Data"
   )
 else()
- if(Steamworks_FOUND)
+  if(Steamworks_FOUND)
     target_link_libraries("${TARGET_NAME}" PUBLIC Steamworks::Steamworks)
     target_compile_definitions(${TARGET_NAME} PRIVATE USE_STEAMWORKS)
     add_custom_command(TARGET ${TARGET_NAME} POST_BUILD

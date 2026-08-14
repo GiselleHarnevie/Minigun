@@ -4,6 +4,7 @@
 #include "Renderer.h"
 #include "Texture2D.h"
 #include "Font.h"
+#include <iostream>
 
 namespace fs = std::filesystem;
 
@@ -35,6 +36,7 @@ std::shared_ptr<dae::Font> dae::ResourceManager::LoadFont(const std::string& fil
 		m_loadedFonts.insert(std::pair(key,std::make_shared<Font>(fullPath.string(), size)));
 	return m_loadedFonts.at(key);
 }
+
 
 void dae::ResourceManager::UnloadUnusedResources()
 {

@@ -1,5 +1,7 @@
-#include <algorithm>
 #include "Scene.h"
+#include <algorithm>
+#include "GameObject.h"
+
 
 using namespace dae;
 
@@ -21,17 +23,40 @@ void Scene::Remove(const GameObject& object)
 	);
 }
 
+void Scene::RemoveMarkedForDelete()
+{
+	m_objects.erase(
+		std::remove_if(
+			m_objects.begin(),
+			m_objects.end(),
+			[](const auto& object)
+			{
+				return object->IsMarkedForDelete();
+			}
+		),
+		m_objects.end()
+	);
+}
+
 void Scene::RemoveAll()
 {
 	m_objects.clear();
+
 }
 
 void Scene::Update(float deltaTime)
 {
-	for(auto& object : m_objects)
+
+	for (auto& object : m_objects)
 	{
+		if (object->IsMarkedForDelete()) continue;
 		object->Update(deltaTime);
 	}
+
+	RemoveMarkedForDelete();
+
+	if (m_PostUpdateCallback)
+		m_PostUpdateCallback();
 }
 
 void dae::Scene::FixedUpdate(float fixedTimeStep)

@@ -1,6 +1,6 @@
-﻿# MsPacman
-Design Patterns used are Component, Command, Observer, State, Service Locator and Singleton.
-Json is used to load levels.
+﻿# Dig Dug
+Design Patterns used are Component, Game Loop, Update method, Command, Command, Observer, State, Service Locator and Singleton.
+Json is used to load levels and highscores.
 
 # Minigin
 

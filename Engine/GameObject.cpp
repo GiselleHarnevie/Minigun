@@ -1,11 +1,12 @@
-#include <string>
 #include "GameObject.h"
+#include <string>
 #include "ResourceManager.h"
 #include "Renderer.h"
 
 dae::GameObject::GameObject()
 	: m_pParent{},
-	m_pChildren{}
+	m_pChildren{},
+	m_MarkedForDelete{false}
 {
 	//m_pTransform = &AddComponent<TransformComponent>();
 }
@@ -34,6 +35,16 @@ void dae::GameObject::Render() const
 	{
 		component->Render();
 	}
+}
+
+void dae::GameObject::MarkForDelete()
+{
+	m_MarkedForDelete = true;
+}
+
+bool dae::GameObject::IsMarkedForDelete() const
+{
+	return m_MarkedForDelete;
 }
 
 //w2
@@ -129,8 +140,6 @@ void dae::GameObject::AddChild(GameObject* child)
 //	return *m_pTransform;
 //}
 
-
-//move to transform comp..?
 const glm::vec3& dae::GameObject::GetWorldPosition()
 {
 	UpdateWorldPosition();
@@ -141,6 +150,11 @@ void dae::GameObject::SetLocalPosition(const glm::vec3& pos)
 {
 	m_LocalPosition = pos;
 	SetPositionDirty();
+}
+
+void dae::GameObject::SetLocalPosition(const glm::vec2& pos)
+{
+	SetLocalPosition(glm::vec3{ pos.x, pos.y, 0.f });
 }
 
 const glm::vec3& dae::GameObject::GetLocalPosition()

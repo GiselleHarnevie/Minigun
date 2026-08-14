@@ -11,6 +11,7 @@ namespace dae
 	public:
 		void Add(std::unique_ptr<GameObject> object);
 		void Remove(const GameObject& object);
+		void RemoveMarkedForDelete();
 		void RemoveAll();
 
 		void Update(float deltaTime);
@@ -23,11 +24,13 @@ namespace dae
 		Scene& operator=(const Scene& other) = delete;
 		Scene& operator=(Scene&& other) = delete;
 
+		void SetPostUpdateCallback(std::function<void()> callback) { m_PostUpdateCallback = std::move(callback); }
 	private:
 		friend class SceneManager;
 		explicit Scene() = default;
 
 		std::vector < std::unique_ptr<GameObject>> m_objects{};
+		std::function<void()> m_PostUpdateCallback;
 	};
 
 }

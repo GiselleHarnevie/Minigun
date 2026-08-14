@@ -1,10 +1,22 @@
 [
   {
     "name": "AAA",
-    "score": 1000
+    "score": 100
   },
   {
     "name": "BBB",
-    "score": 1000
+    "score": 100
+  },
+  {
+    "name": "CCC",
+    "score": 100
+  },
+  {
+    "name": "DDD",
+    "score": 100
+  },
+  {
+    "name": "EEE",
+    "score": 100
   }
 ]

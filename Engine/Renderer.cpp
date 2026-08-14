@@ -1,8 +1,9 @@
 ﻿#include "Renderer.h"
+
 #include <stdexcept>
 #include <cstring>
 #include <iostream>
-#include "Renderer.h"
+
 #include "SceneManager.h"
 #include "Texture2D.h"
 #include <imgui.h>
@@ -26,6 +27,7 @@ void dae::Renderer::Init(SDL_Window* window)
 		std::cout << "Failed to create the renderer: " << SDL_GetError() << "\n";
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 	}
+
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -54,13 +56,14 @@ void dae::Renderer::Render() const
 
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
-	SDL_RenderClear(m_renderer);		
+	SDL_RenderClear(m_renderer);
 
 	SceneManager::GetInstance().Render();
 
 	ImGui::Render();
 
 	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), m_renderer);
+
 	SDL_RenderPresent(m_renderer);
 }
 
@@ -85,6 +88,7 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	dst.y = y;
 	SDL_GetTextureSize(texture.GetSDLTexture(), &dst.w, &dst.h);
 	SDL_RenderTexture(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	//SDL_RenderTextureRotated(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
@@ -95,6 +99,30 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	dst.w = width;
 	dst.h = height;
 	SDL_RenderTexture(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+}
+
+void dae::Renderer::RenderTexture(const Texture2D& texture, SDL_FRect src, SDL_FRect dst, double rotation, SDL_FlipMode flipMode) const
+{
+	
+
+	SDL_RenderTextureRotated(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst, rotation, nullptr, flipMode);
+}
+
+void dae::Renderer::RenderTexture(const Texture2D& texture, SDL_FRect src, SDL_FRect dst, double rotation, SDL_FlipMode flipMode, const SDL_FPoint* pivotPoint) const
+{
+
+
+	SDL_RenderTextureRotated(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst, rotation, pivotPoint, flipMode);
+}
+
+void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height, float rotation) const
+{
+	SDL_FRect dst{};
+	dst.x = x;
+	dst.y = y;
+	dst.w = width;
+	dst.h = height;
+	SDL_RenderTextureRotated(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst, rotation, nullptr, SDL_FLIP_NONE);
 }
 
 

@@ -29,11 +29,14 @@ dae::Texture2D::Texture2D(const std::string &fullPath)
             std::string("Failed to load PNG: ") + SDL_GetError()
         );
     }
+    
 
     m_texture = SDL_CreateTextureFromSurface(
         Renderer::GetInstance().GetSDLRenderer(),
         surface
     );
+
+    SDL_SetTextureScaleMode(m_texture, SDL_SCALEMODE_NEAREST);
 
     SDL_DestroySurface(surface);
 

@@ -59,7 +59,7 @@ namespace dae
 		void BindCommand(int gamepadIndex, unsigned int button, InputState state, Command* command);
 
 		//UNBIND COMMAND
-		void UnbindCommand();
+		void UnbindAllCommands();
 
 		void AddGamepad(int index);
 
